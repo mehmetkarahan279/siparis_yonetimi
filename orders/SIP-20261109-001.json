@@ -1,0 +1,40 @@
+{
+  "no": "SIP-20261109-001",
+  "date": "2026-11-09T13:22:19.828Z",
+  "customer": {
+    "title": "mehmet",
+    "contact": "mhmet",
+    "email": "info@kbras.com.tr",
+    "phone": "5313873753",
+    "address": "bura"
+  },
+  "deliveryAddress": "bura",
+  "termin": "2026-11-10",
+  "vade": "30",
+  "payment": "Havale/EFT",
+  "deliveryType": "Ambar",
+  "items": [
+    {
+      "kod": "KPK-106",
+      "aciklama": "KBR 250 CC PLASTÄ°K BARDAK 10 LU",
+      "qty": 100,
+      "price": 31,
+      "isks": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "amount": 3100
+    }
+  ],
+  "araToplam": 3100,
+  "kdvOrani": 20,
+  "kdvTutari": 620,
+  "grandTotal": 3720,
+  "status": "Beklemede",
+  "rejectReason": "",
+  "responseDate": null,
+  "createdUser": "admin"
+}

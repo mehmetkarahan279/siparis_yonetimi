@@ -1,0 +1,40 @@
+{
+  "no": "SIP-20261109-004",
+  "date": "2026-11-09T12:26:38.463Z",
+  "customer": {
+    "title": "KANYON BİLGİSAYAR DANIŞMANLIK HİZMETLERİ",
+    "contact": "MEHMET KARAHAN",
+    "email": "dilek.catak@kbras.com.tr",
+    "phone": "5313872753",
+    "address": "bursa"
+  },
+  "deliveryAddress": "bursa",
+  "termin": "2026-11-09",
+  "vade": "90",
+  "payment": "Havale/EFT",
+  "deliveryType": "Ambar",
+  "items": [
+    {
+      "kod": "KPK-106",
+      "aciklama": "KBR 250 CC PLASTİK BARDAK 10 LU",
+      "qty": 1000,
+      "price": 31,
+      "isks": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "amount": 31000
+    }
+  ],
+  "araToplam": 31000,
+  "kdvOrani": 20,
+  "kdvTutari": 6200,
+  "grandTotal": 37200,
+  "status": "Beklemede",
+  "rejectReason": "",
+  "responseDate": null,
+  "createdUser": "admin"
+}

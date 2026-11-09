@@ -1,0 +1,40 @@
+{
+  "no": "SIP-20261109-005",
+  "date": "2026-11-09T12:40:47.276Z",
+  "customer": {
+    "title": "KANYON BİLGİSAYAR DANIŞMANLIK HİZMETLERİ",
+    "contact": "MEHMET KARAHAN",
+    "email": "eminekarahan279@gmail.com",
+    "phone": "5313872753",
+    "address": "bursa"
+  },
+  "deliveryAddress": "bursa",
+  "termin": "2026-01-09",
+  "vade": "90",
+  "payment": "Havale/EFT",
+  "deliveryType": "Ambar",
+  "items": [
+    {
+      "kod": "KPK-111",
+      "aciklama": "KBR İNCE MEŞRUBAT BARDAĞI 6 LI",
+      "qty": 100,
+      "price": 90,
+      "isks": [
+        55,
+        0,
+        0,
+        0,
+        0
+      ],
+      "amount": 4049.9999999999995
+    }
+  ],
+  "araToplam": 4049.9999999999995,
+  "kdvOrani": 20,
+  "kdvTutari": 810,
+  "grandTotal": 4860,
+  "status": "Beklemede",
+  "rejectReason": "",
+  "responseDate": null,
+  "createdUser": "admin"
+}

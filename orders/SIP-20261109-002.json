@@ -1,24 +1,24 @@
 {
   "no": "SIP-20261109-002",
-  "date": "2026-11-09T12:22:01.696Z",
+  "date": "2026-11-09T13:23:13.659Z",
   "customer": {
-    "title": "KANYON BİLGİSAYAR DANIŞMANLIK HİZMETLERİ",
-    "contact": "MEHMET KARAHAN",
-    "email": "mehmet.karahan@kbras.com.tr",
-    "phone": "5313872753",
-    "address": "bursa"
+    "title": "mehmet",
+    "contact": "mhmet",
+    "email": "info@kbras.com.tr",
+    "phone": "5313873753",
+    "address": "bura"
   },
-  "deliveryAddress": "bursa",
-  "termin": "2026-11-09",
-  "vade": "90",
+  "deliveryAddress": "bura",
+  "termin": "2026-11-10",
+  "vade": "30",
   "payment": "Havale/EFT",
   "deliveryType": "Ambar",
   "items": [
     {
-      "kod": "KPK-202",
-      "aciklama": "KBR 3 GÖZLÜ KÖPÜK TABAK 5 Lİ",
-      "qty": 100,
-      "price": 50,
+      "kod": "KPK-103",
+      "aciklama": "KBR KRÄ°STAL BARDAK 5 LÄ°",
+      "qty": 1,
+      "price": 45,
       "isks": [
         0,
         0,
@@ -26,13 +26,13 @@
         0,
         0
       ],
-      "amount": 5000
+      "amount": 45
     }
   ],
-  "araToplam": 5000,
+  "araToplam": 45,
   "kdvOrani": 20,
-  "kdvTutari": 1000,
-  "grandTotal": 6000,
+  "kdvTutari": 9,
+  "grandTotal": 54,
   "status": "Beklemede",
   "rejectReason": "",
   "responseDate": null,

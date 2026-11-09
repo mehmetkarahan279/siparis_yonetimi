@@ -1,0 +1,40 @@
+{
+  "no": "SIP-20261109-006",
+  "date": "2026-11-09T12:42:24.795Z",
+  "customer": {
+    "title": "KANYON BİLGİSAYAR DANIŞMANLIK HİZMETLERİ",
+    "contact": "MEHMET KARAHAN",
+    "email": "eminekarahan279@gmail.com",
+    "phone": "5313872753",
+    "address": "bursa"
+  },
+  "deliveryAddress": "bursa",
+  "termin": "2026-01-09",
+  "vade": "90",
+  "payment": "Havale/EFT",
+  "deliveryType": "Ambar",
+  "items": [
+    {
+      "kod": "KPK-103",
+      "aciklama": "KBR KRİSTAL BARDAK 5 Lİ",
+      "qty": 1,
+      "price": 45,
+      "isks": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "amount": 45
+    }
+  ],
+  "araToplam": 45,
+  "kdvOrani": 20,
+  "kdvTutari": 9,
+  "grandTotal": 54,
+  "status": "Beklemede",
+  "rejectReason": "",
+  "responseDate": null,
+  "createdUser": "admin"
+}

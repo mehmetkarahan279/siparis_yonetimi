@@ -1,11 +1,11 @@
 {
   "no": "SIP-20261111-001",
-  "date": "2026-11-11T19:48:56.169Z",
+  "date": "2026-11-11T20:11:15.429Z",
   "customer": {
-    "title": "MEHMET",
-    "contact": "MEHMET",
-    "email": "info@kbras.com.tr",
-    "phone": "531738540",
+    "title": "mhmet",
+    "contact": "mehmeg",
+    "email": "mehmet.karahan@kbras.com.tr",
+    "phone": "5313872753",
     "address": "bursa"
   },
   "deliveryAddress": "bursa",
@@ -15,24 +15,24 @@
   "deliveryType": "Ambar",
   "items": [
     {
-      "kod": "KPK-005",
-      "aciklama": "KBR 8 OZ KAÄIT BARDAK 6 LI + KAPAK",
+      "kod": "KPK-102",
+      "aciklama": "KBR 180 CC PLASTÄ°K BARDAK 10 LU",
       "qty": 100,
-      "price": 60,
+      "price": 23,
       "isks": [
-        5,
-        5,
-        5,
+        0,
+        0,
+        0,
         0,
         0
       ],
-      "amount": 5144.25
+      "amount": 2300
     }
   ],
-  "araToplam": 5144.25,
+  "araToplam": 2300,
   "kdvOrani": 20,
-  "kdvTutari": 1028.8500000000001,
-  "grandTotal": 6173.1,
+  "kdvTutari": 460,
+  "grandTotal": 2760,
   "status": "Beklemede",
   "rejectReason": "",
   "responseDate": null,

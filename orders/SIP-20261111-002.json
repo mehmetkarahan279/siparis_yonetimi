@@ -1,11 +1,11 @@
 {
   "no": "SIP-20261111-002",
-  "date": "2026-11-11T19:49:36.944Z",
+  "date": "2026-11-11T20:11:47.436Z",
   "customer": {
-    "title": "MEHMET",
-    "contact": "MEHMET",
-    "email": "info@kbras.com.tr",
-    "phone": "531738540",
+    "title": "mhmet",
+    "contact": "mehmeg",
+    "email": "mehmet.karahan@kbras.com.tr",
+    "phone": "5313872753",
     "address": "bursa"
   },
   "deliveryAddress": "bursa",
@@ -15,10 +15,10 @@
   "deliveryType": "Ambar",
   "items": [
     {
-      "kod": "KPK-106",
-      "aciklama": "KBR 250 CC PLASTÄ°K BARDAK 10 LU",
-      "qty": 1,
-      "price": 31,
+      "kod": "KPK-103",
+      "aciklama": "KBR KRÄ°STAL BARDAK 5 LÄ°",
+      "qty": 100,
+      "price": 45,
       "isks": [
         0,
         0,
@@ -26,13 +26,13 @@
         0,
         0
       ],
-      "amount": 31
+      "amount": 4500
     }
   ],
-  "araToplam": 31,
+  "araToplam": 4500,
   "kdvOrani": 20,
-  "kdvTutari": 6.2,
-  "grandTotal": 37.2,
+  "kdvTutari": 900,
+  "grandTotal": 5400,
   "status": "Beklemede",
   "rejectReason": "",
   "responseDate": null,

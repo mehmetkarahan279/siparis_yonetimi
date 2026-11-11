@@ -1,0 +1,40 @@
+{
+  "no": "SIP-20261111-006",
+  "date": "2026-11-11T20:41:25.076Z",
+  "customer": {
+    "title": "MEHMET",
+    "contact": "MEHMET",
+    "email": "info@kbras.com.tr",
+    "phone": "531738540",
+    "address": "bursa"
+  },
+  "deliveryAddress": "bursa",
+  "termin": "2026-01-14",
+  "vade": "30",
+  "payment": "Havale/EFT",
+  "deliveryType": "Ambar",
+  "items": [
+    {
+      "kod": "KPK-101",
+      "aciklama": "KBR 180 CC PLASTÄ°K BARDAK 25 LÄ°",
+      "qty": 100,
+      "price": 40,
+      "isks": [
+        5,
+        15,
+        0,
+        0,
+        0
+      ],
+      "amount": 3230
+    }
+  ],
+  "araToplam": 3230,
+  "kdvOrani": 20,
+  "kdvTutari": 646,
+  "grandTotal": 3876,
+  "status": "Beklemede",
+  "rejectReason": "",
+  "responseDate": null,
+  "createdUser": "admin"
+}

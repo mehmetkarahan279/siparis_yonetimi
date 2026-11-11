@@ -1,0 +1,40 @@
+{
+  "no": "SIP-20261111-001",
+  "date": "2026-11-11T19:48:56.169Z",
+  "customer": {
+    "title": "MEHMET",
+    "contact": "MEHMET",
+    "email": "info@kbras.com.tr",
+    "phone": "531738540",
+    "address": "bursa"
+  },
+  "deliveryAddress": "bursa",
+  "termin": "2026-01-12",
+  "vade": "30",
+  "payment": "Havale/EFT",
+  "deliveryType": "Ambar",
+  "items": [
+    {
+      "kod": "KPK-005",
+      "aciklama": "KBR 8 OZ KAÄIT BARDAK 6 LI + KAPAK",
+      "qty": 100,
+      "price": 60,
+      "isks": [
+        5,
+        5,
+        5,
+        0,
+        0
+      ],
+      "amount": 5144.25
+    }
+  ],
+  "araToplam": 5144.25,
+  "kdvOrani": 20,
+  "kdvTutari": 1028.8500000000001,
+  "grandTotal": 6173.1,
+  "status": "Beklemede",
+  "rejectReason": "",
+  "responseDate": null,
+  "createdUser": "admin"
+}

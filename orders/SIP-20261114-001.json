@@ -1,24 +1,24 @@
 {
   "no": "SIP-20261114-001",
-  "date": "2026-11-14T13:31:33.183Z",
+  "date": "2026-11-14T15:01:44.339Z",
   "customer": {
     "title": "KANYON BİLGİSAYAR VE DANIŞMANLIK HİZMETLERİ",
-    "contact": "Mehmet KARAHAN",
+    "contact": "MEHMET KARAHAN",
     "email": "eminekarahan279@gmail.com",
-    "phone": "05313872753",
-    "address": "KİRAZPINAR"
+    "phone": "531738540",
+    "address": "KİRAZPINAR MAHALLESİ EEMLAK KONUTLARI 5784 ADA B3 BLOK NO:84 GEBZE KOCAELİ"
   },
-  "deliveryAddress": "KİRAZPINAR",
-  "termin": "2026-11-20",
-  "vade": "60",
+  "deliveryAddress": "KİRAZPINAR MAHALLESİ EEMLAK KONUTLARI 5784 ADA B3 BLOK NO:84 GEBZE KOCAELİ",
+  "termin": "2026-10-15",
+  "vade": "90",
   "payment": "Havale/EFT",
   "deliveryType": "Ambar",
   "items": [
     {
-      "kod": "KPK-112",
-      "aciklama": "KBR KRÄ°STAL BARDAK 10 LU",
-      "qty": 15001,
-      "price": 60,
+      "kod": "KPK-106",
+      "aciklama": "KBR 250 CC PLASTÄ°K BARDAK 10 LU",
+      "qty": 9000,
+      "price": 31,
       "isks": [
         0,
         0,
@@ -26,13 +26,13 @@
         0,
         0
       ],
-      "amount": 900060
+      "amount": 279000
     }
   ],
-  "araToplam": 900060,
+  "araToplam": 279000,
   "kdvOrani": 20,
-  "kdvTutari": 180012,
-  "grandTotal": 1080072,
+  "kdvTutari": 55800,
+  "grandTotal": 334800,
   "status": "Beklemede",
   "rejectReason": "",
   "responseDate": null,

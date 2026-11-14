@@ -1,11 +1,11 @@
 {
   "no": "SIP-20261114-003",
-  "date": "2026-11-14T11:04:04.985Z",
+  "date": "2026-11-14T11:25:59.093Z",
   "customer": {
-    "title": "MEHMET",
-    "contact": "MEHMET",
+    "title": "mhmet",
+    "contact": "mehmeg",
     "email": "eminekarahan279@gmail.com",
-    "phone": "531738540",
+    "phone": "5313872753",
     "address": "bursa"
   },
   "deliveryAddress": "bursa",
@@ -15,10 +15,10 @@
   "deliveryType": "Ambar",
   "items": [
     {
-      "kod": "KPK-111",
-      "aciklama": "KBR Ä°NCE MEÅRUBAT BARDAÄI 6 LI",
-      "qty": 6500,
-      "price": 90,
+      "kod": "KPK-102",
+      "aciklama": "KBR 180 CC PLASTÄ°K BARDAK 10 LU",
+      "qty": 1000,
+      "price": 23,
       "isks": [
         0,
         0,
@@ -26,13 +26,13 @@
         0,
         0
       ],
-      "amount": 585000
+      "amount": 23000
     }
   ],
-  "araToplam": 585000,
+  "araToplam": 23000,
   "kdvOrani": 20,
-  "kdvTutari": 117000,
-  "grandTotal": 702000,
+  "kdvTutari": 4600,
+  "grandTotal": 27600,
   "status": "Beklemede",
   "rejectReason": "",
   "responseDate": null,

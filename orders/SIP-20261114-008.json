@@ -1,24 +1,24 @@
 {
   "no": "SIP-20261114-008",
-  "date": "2026-11-14T12:08:18.794Z",
+  "date": "2026-11-14T14:34:03.930Z",
   "customer": {
-    "title": "MEHMET",
-    "contact": "MEHMET",
+    "title": "KANYON BİLGİSAYAR VE DANIŞMANLIK HİZMETLERİ",
+    "contact": "Mehmet KARAHAN",
     "email": "eminekarahan279@gmail.com",
-    "phone": "531738540",
-    "address": "bursa"
+    "phone": "05313872753",
+    "address": "KİRAZPINAR"
   },
-  "deliveryAddress": "bursa",
-  "termin": "2026-11-15",
-  "vade": "30",
+  "deliveryAddress": "KİRAZPINAR",
+  "termin": "2026-11-20",
+  "vade": "60",
   "payment": "Havale/EFT",
   "deliveryType": "Ambar",
   "items": [
     {
-      "kod": "KPK-112",
-      "aciklama": "KBR KRÄ°STAL BARDAK 10 LU",
-      "qty": 1,
-      "price": 60,
+      "kod": "KPK-103",
+      "aciklama": "KBR KRÄ°STAL BARDAK 5 LÄ°",
+      "qty": 998,
+      "price": 45,
       "isks": [
         0,
         0,
@@ -26,13 +26,13 @@
         0,
         0
       ],
-      "amount": 60
+      "amount": 44910
     }
   ],
-  "araToplam": 60,
+  "araToplam": 44910,
   "kdvOrani": 20,
-  "kdvTutari": 12,
-  "grandTotal": 72,
+  "kdvTutari": 8982,
+  "grandTotal": 53892,
   "status": "Beklemede",
   "rejectReason": "",
   "responseDate": null,

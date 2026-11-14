@@ -1,24 +1,24 @@
 {
   "no": "SIP-20261114-003",
-  "date": "2026-11-14T11:25:59.093Z",
+  "date": "2026-11-14T13:24:50.497Z",
   "customer": {
-    "title": "mhmet",
-    "contact": "mehmeg",
+    "title": "KANYON BİLGİSAYAR VE DANIŞMANLIK HİZMETLERİ",
+    "contact": "Mehmet KARAHAN",
     "email": "eminekarahan279@gmail.com",
-    "phone": "5313872753",
-    "address": "bursa"
+    "phone": "05313872753",
+    "address": "SULTANBEYLİ"
   },
-  "deliveryAddress": "bursa",
+  "deliveryAddress": "SULTANBEYLİ",
   "termin": "2026-11-15",
-  "vade": "30",
+  "vade": "60",
   "payment": "Havale/EFT",
   "deliveryType": "Ambar",
   "items": [
     {
-      "kod": "KPK-102",
-      "aciklama": "KBR 180 CC PLASTÄ°K BARDAK 10 LU",
-      "qty": 1000,
-      "price": 23,
+      "kod": "KPK-101",
+      "aciklama": "KBR 180 CC PLASTÄ°K BARDAK 25 LÄ°",
+      "qty": 32,
+      "price": 40,
       "isks": [
         0,
         0,
@@ -26,15 +26,15 @@
         0,
         0
       ],
-      "amount": 23000
+      "amount": 1280
     }
   ],
-  "araToplam": 23000,
+  "araToplam": 1280,
   "kdvOrani": 20,
-  "kdvTutari": 4600,
-  "grandTotal": 27600,
+  "kdvTutari": 256,
+  "grandTotal": 1536,
   "status": "Beklemede",
   "rejectReason": "",
   "responseDate": null,
-  "createdUser": "admin"
+  "createdUser": "KENAN DÜNDAR"
 }

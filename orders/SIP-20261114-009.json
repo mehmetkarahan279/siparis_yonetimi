@@ -1,0 +1,40 @@
+{
+  "no": "SIP-20261114-009",
+  "date": "2026-11-14T12:11:36.737Z",
+  "customer": {
+    "title": "MEHMET",
+    "contact": "MEHMET",
+    "email": "info@kbras.com.tr",
+    "phone": "531738540",
+    "address": "bursa"
+  },
+  "deliveryAddress": "bursa",
+  "termin": "2026-11-15",
+  "vade": "30",
+  "payment": "Havale/EFT",
+  "deliveryType": "Ambar",
+  "items": [
+    {
+      "kod": "KPK-110",
+      "aciklama": "KBR GENÄ°Å MEÅRUBAT BARDAÄI 6 LI",
+      "qty": 2222,
+      "price": 125,
+      "isks": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "amount": 277750
+    }
+  ],
+  "araToplam": 277750,
+  "kdvOrani": 20,
+  "kdvTutari": 55550,
+  "grandTotal": 333300,
+  "status": "Beklemede",
+  "rejectReason": "",
+  "responseDate": null,
+  "createdUser": "admin"
+}

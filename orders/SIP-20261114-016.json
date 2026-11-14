@@ -1,0 +1,40 @@
+{
+  "no": "SIP-20261114-016",
+  "date": "2026-11-14T12:51:50.712Z",
+  "customer": {
+    "title": "MEHMET",
+    "contact": "MEHMET",
+    "email": "eminekarahan279@gmail.com",
+    "phone": "531738540",
+    "address": "bursa"
+  },
+  "deliveryAddress": "bursa",
+  "termin": "2026-11-16",
+  "vade": "30",
+  "payment": "Havale/EFT",
+  "deliveryType": "Ambar",
+  "items": [
+    {
+      "kod": "KPK-103",
+      "aciklama": "KBR KRÄ°STAL BARDAK 5 LÄ°",
+      "qty": 1543534,
+      "price": 45,
+      "isks": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "amount": 69459030
+    }
+  ],
+  "araToplam": 69459030,
+  "kdvOrani": 20,
+  "kdvTutari": 13891806,
+  "grandTotal": 83350836,
+  "status": "Beklemede",
+  "rejectReason": "",
+  "responseDate": null,
+  "createdUser": "KENAN DÜNDAR"
+}

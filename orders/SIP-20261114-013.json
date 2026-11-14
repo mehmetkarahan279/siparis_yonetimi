@@ -1,0 +1,40 @@
+{
+  "no": "SIP-20261114-013",
+  "date": "2026-11-14T12:27:07.989Z",
+  "customer": {
+    "title": "MEHMET",
+    "contact": "MEHMET",
+    "email": "eminekarahan279@gmail.com",
+    "phone": "531738540",
+    "address": "bursa"
+  },
+  "deliveryAddress": "bursa",
+  "termin": "2026-11-15",
+  "vade": "30",
+  "payment": "Havale/EFT",
+  "deliveryType": "Ambar",
+  "items": [
+    {
+      "kod": "KPK-011",
+      "aciklama": "KBR 8 OZ KAÄIT BARDAK 10 LU",
+      "qty": 1333,
+      "price": 48,
+      "isks": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "amount": 63984
+    }
+  ],
+  "araToplam": 63984,
+  "kdvOrani": 20,
+  "kdvTutari": 12796.800000000001,
+  "grandTotal": 76780.8,
+  "status": "Beklemede",
+  "rejectReason": "",
+  "responseDate": null,
+  "createdUser": "admin"
+}

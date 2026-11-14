@@ -1,0 +1,2665 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sipariş Yönetim Sistemi</title>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        :root {
+            --primary: #1e40af;
+            --primary-dark: #1e3a8a;
+            --success: #059669;
+            --danger: #dc2626;
+            --warning: #d97706;
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --text: #1e293b;
+            --border: #e2e8f0;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+        }
+        .hidden { display: none !important; }
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+        }
+        .login-box {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+            width: 100%;
+            max-width: 400px;
+        }
+        .login-box h1 {
+            text-align: center;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+        .login-box p {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+        .form-group { margin-bottom: 1.25rem; }
+        label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: #334155;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 0.7rem 0.9rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.15);
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.25rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-success { background: var(--success); color: white; }
+        .btn-success:hover { background: #047857; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-danger:hover { background: #b91c1c; }
+        .btn-secondary { background: #64748b; color: white; }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+        .btn-outline:hover { background: #f8fafc; }
+        .btn-sm { padding: 0.4rem 0.75rem; font-size: 0.85rem; }
+        .btn-block { width: 100%; }
+        .app-header {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgb(0 0 0 / 0.05);
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .app-header h1 {
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+        .user-info-badge {
+            font-size: 0.85rem;
+            color: #475569;
+            background: #e2e8f0;
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        .nav-tabs {
+            display: flex;
+            gap: 0.25rem;
+            background: #f1f5f9;
+            padding: 0.35rem;
+            border-radius: 10px;
+            flex-wrap: wrap;
+        }
+        .nav-tab {
+            padding: 0.5rem 0.9rem;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.87rem;
+            cursor: pointer;
+            color: #64748b;
+            border: none;
+            background: transparent;
+        }
+        .nav-tab.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+        }
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+        .card {
+            background: var(--card);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: 0 1px 3px rgb(0 0 0 / 0.05);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+        .card-header {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f8fafc;
+        }
+        .card-header h2 { font-size: 1.1rem; font-weight: 600; }
+        .card-body { padding: 1.25rem; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+        @media (max-width: 900px) {
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+        }
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+        th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #475569;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+        tr:hover { background: #f8fafc; }
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.6rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .badge-pending { background: #fef3c7; color: #92400e; }
+        .badge-approved { background: #d1fae5; color: #065f46; }
+        .badge-rejected { background: #fee2e2; color: #991b1b; }
+        .alert {
+            padding: 0.85rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        .alert-info { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+        .alert-warning { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
+        .product-row {
+            display: grid;
+            grid-template-columns: 2fr 0.8fr 1fr 0.7fr 0.7fr 0.7fr 0.7fr 0.7fr 1fr auto;
+            gap: 0.5rem;
+            align-items: end;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px dashed var(--border);
+        }
+        .product-row label { font-size: 0.75rem; margin-bottom: 0.2rem; }
+        @media (max-width: 1200px) {
+            .product-row {
+                grid-template-columns: 1.5fr 0.7fr 0.9fr 0.6fr 0.6fr 0.6fr 0.6fr 0.6fr 0.9fr auto;
+                font-size: 0.85rem;
+            }
+        }
+        @media (max-width: 900px) {
+            .product-row {
+                grid-template-columns: 1fr 1fr;
+                gap: 0.6rem;
+            }
+            .product-row > div:last-child {
+                grid-column: 1 / -1;
+                justify-self: start;
+            }
+        }
+        .empty-state { text-align: center; padding: 3rem 1rem; color: #94a3b8; }
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+        .modal {
+            background: white;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 750px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-body { padding: 1.25rem; }
+        .modal-footer {
+            padding: 1rem 1.25rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+        .file-upload {
+            border: 2px dashed var(--border);
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+        }
+        .file-upload:hover { border-color: var(--primary); background: #f8fafc; }
+        .file-upload input { display: none; }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.25rem;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .stat-card .number { font-size: 1.75rem; font-weight: 700; color: var(--primary); }
+        .stat-card .label { font-size: 0.85rem; color: #64748b; margin-top: 0.25rem; }
+        .text-right { text-align: right; }
+        .text-muted { color: #64748b; font-size: 0.85rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-3 { margin-top: 1rem; }
+        .flex { display: flex; }
+        .gap-2 { gap: 0.5rem; }
+        .align-center { align-items: center; }
+        .totals-box {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+            margin-top: 1.25rem;
+            max-width: 360px;
+            margin-left: auto;
+        }
+        .totals-box .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.35rem 0;
+            font-size: 0.95rem;
+        }
+        .totals-box .row.grand {
+            border-top: 2px solid var(--primary);
+            margin-top: 0.5rem;
+            padding-top: 0.6rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+
+<!-- GİRİŞ EKRANI -->
+<div id="loginScreen" class="login-container">
+    <div class="login-box">
+        <h1>📦 Sipariş Yönetim Sistemi</h1>
+        <p>Kullanıcı paneline giriş yapın</p>
+        <div class="form-group">
+            <label>Kullanıcı Adı</label>
+            <input type="text" id="loginUser" placeholder="Kullanıcı adınızı girin">
+        </div>
+        <div class="form-group">
+            <label>Şifre</label>
+            <input type="password" id="loginPass" placeholder="Şifrenizi girin">
+        </div>
+        <button class="btn btn-primary btn-block" onclick="login()">Giriş Yap</button>
+    </div>
+</div>
+
+<!-- ANA UYGULAMA -->
+<div id="app" class="hidden">
+    <header class="app-header" id="appHeader">
+        <h1>📦 Sipariş Yönetim Sistemi</h1>
+        <div class="nav-tabs" id="mainNavTabs">
+            <button class="nav-tab active" data-tab="dashboard" onclick="showTab('dashboard')">Özet</button>
+            <button class="nav-tab" data-tab="products" onclick="showTab('products')">Ürünler</button>
+            <button class="nav-tab" data-tab="customers" onclick="showTab('customers')">Alıcılar</button>
+            <button class="nav-tab" data-tab="newOrder" onclick="showTab('newOrder')">Yeni Sipariş</button>
+            <button class="nav-tab" data-tab="orders" onclick="showTab('orders')">Siparişler</button>
+
+            <button class="nav-tab admin-only hidden" data-tab="users" onclick="showTab('users')">Kullanıcılar</button>
+            <button class="nav-tab admin-only hidden" data-tab="settings" onclick="showTab('settings')">Ayarlar</button>
+        </div>
+        <div class="flex gap-2 align-center" id="headerUserArea">
+            <span id="currentUserDisplay" class="user-info-badge"></span>
+            <button class="btn btn-outline btn-sm" onclick="logout()">Çıkış</button>
+        </div>
+    </header>
+
+    <main class="main-content">
+
+        <!-- ÖZET -->
+        <div id="tab-dashboard" class="tab-content">
+            <div class="stats">
+                <div class="stat-card"><div class="number" id="statProducts">0</div><div class="label">Ürün</div></div>
+                <div class="stat-card"><div class="number" id="statCustomers">0</div><div class="label">Alıcı</div></div>
+                <div class="stat-card"><div class="number" id="statOrders">0</div><div class="label">Toplam Sipariş</div></div>
+                <div class="stat-card"><div class="number" id="statPending">0</div><div class="label">Bekleyen</div></div>
+                <div class="stat-card"><div class="number" id="statApproved">0</div><div class="label">Onaylanan</div></div>
+            </div>
+            <div class="card">
+                <div class="card-header"><h2>Son Siparişler</h2></div>
+                <div class="card-body" id="recentOrders"></div>
+            </div>
+        </div>
+
+        <!-- ÜRÜNLER -->
+        <div id="tab-products" class="tab-content hidden">
+            <div class="card admin-only hidden" id="productUploadCard">
+                <div class="card-header"><h2>Ürün Yükleme (CSV)</h2></div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <strong>CSV Formatı:</strong> ürün_kodu;açıklama;barkod;paket_ici;koli_ici;palet_ici;fiyat
+                    </div>
+                    <div class="file-upload" onclick="document.getElementById('csvFile').click()">
+                        <input type="file" id="csvFile" accept=".csv,.txt" onchange="loadCSV(event)">
+                        <p>📁 CSV dosyasını seçin</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h2>Yüklü Ürünler</h2>
+                    <button class="btn btn-danger btn-sm admin-only hidden" onclick="clearProducts()">Tümünü Sil</button>
+                </div>
+                <div class="card-body" style="overflow-x:auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ürün Kodu</th><th>Açıklama</th><th>Barkod</th>
+                                <th>Paket İçi</th><th>Koli İçi</th><th>Palet İçi</th><th>Fiyat</th><th>İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ALICILAR -->
+        <div id="tab-customers" class="tab-content hidden">
+            <div class="card">
+                <div class="card-header">
+                    <h2 id="customerFormTitle">Yeni Alıcı Kaydet</h2>
+                </div>
+                <div class="card-body">
+                    <input type="hidden" id="custEditId" value="">
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Alıcı Ünvanı *</label>
+                            <input type="text" id="custTitle">
+                        </div>
+                        <div class="form-group">
+                            <label>Yetkili Adı Soyadı *</label>
+                            <input type="text" id="custContact">
+                        </div>
+                        <div class="form-group">
+                            <label>Firma Mail *</label>
+                            <input type="email" id="custEmail">
+                        </div>
+                        <div class="form-group">
+                            <label>Cep Telefonu *</label>
+                            <input type="text" id="custPhone">
+                        </div>
+                        <div class="form-group">
+                            <label>Müşteri Vadesi (gün) *</label>
+                            <input type="number" id="custVade" value="30" min="0" step="1">
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <label style="font-weight:600; margin-bottom:0.5rem; display:block;">Teslimat Adresleri (en az 1, en fazla 15)</label>
+                        <div id="custAddresses"></div>
+                        <button type="button" class="btn btn-outline btn-sm mt-2" onclick="addAddressField()">+ Adres Ekle</button>
+                    </div>
+
+                    <div class="mt-3 flex gap-2">
+                        <button class="btn btn-primary" id="btnSaveCustomer" onclick="saveCustomer()">Alıcıyı Kaydet</button>
+                        <button class="btn btn-secondary hidden" id="btnCancelEdit" onclick="cancelEditCustomer()">İptal</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header"><h2>Kayıtlı Alıcılar</h2></div>
+                <div class="card-body" style="overflow-x:auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ünvan</th><th>Yetkili</th><th>Mail</th><th>Telefon</th>
+                                <th>Vade</th><th>Adres Sayısı</th><th>Kayıt Eden</th><th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="customersTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- YENİ SİPARİŞ -->
+        <div id="tab-newOrder" class="tab-content hidden">
+            <div class="card">
+                <div class="card-header"><h2>Yeni Sipariş Oluştur</h2></div>
+                <div class="card-body">
+                    <h3 style="margin-bottom:1rem;font-size:1rem;">1. Alıcı Bilgileri</h3>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Kayıtlı Alıcı Seç</label>
+                            <select id="orderCustomerSelect" onchange="fillCustomer()">
+                                <option value="">-- Yeni / Seçiniz --</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Alıcı Ünvanı *</label>
+                            <input type="text" id="orderCustTitle">
+                        </div>
+                        <div class="form-group">
+                            <label>Yetkili Adı Soyadı *</label>
+                            <input type="text" id="orderCustContact">
+                        </div>
+                        <div class="form-group">
+                            <label>Firma Mail *</label>
+                            <input type="email" id="orderCustEmail">
+                        </div>
+                        <div class="form-group">
+                            <label>Cep Telefonu *</label>
+                            <input type="text" id="orderCustPhone">
+                        </div>
+                        <div class="form-group">
+                            <label>Teslimat Adresi Seç (Kayıtlı Adresler)</label>
+                            <select id="orderDeliveryAddressSelect" onchange="onDeliveryAddressSelect()">
+                                <option value="">-- Önce alıcı seçin --</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label>Teslimat Adresi *</label>
+                            <textarea id="orderDeliveryAddress" rows="2"></textarea>
+                        </div>
+                    </div>
+
+                    <hr style="margin:1.5rem 0;border:none;border-top:1px solid var(--border);">
+
+                    <h3 style="margin-bottom:1rem;font-size:1rem;">2. Sipariş Bilgileri</h3>
+                    <div class="grid-3">
+                        <div class="form-group">
+                            <label>Termin Tarihi *</label>
+                            <input type="date" id="orderTermin">
+                        </div>
+                        <div class="form-group">
+                            <label>Ödeme Vadesi (gün)</label>
+                            <input type="number" id="orderVade" value="30">
+                        </div>
+                        <div class="form-group">
+                            <label>Ödeme Şekli</label>
+                            <select id="orderPayment">
+                                <option value="Havale/EFT">Havale/EFT</option>
+                                <option value="Çek">Çek</option>
+                                <option value="Senet">Senet</option>
+                                <option value="Kredi Kartı">Kredi Kartı</option>
+                                <option value="Nakit">Nakit</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Teslimat Şekli</label>
+                            <select id="orderDeliveryType">
+                                <option value="Ambar">Ambar</option>
+                                <option value="Müşteri Adresine">Müşteri Adresine</option>
+                                <option value="Fabrika Teslim">Fabrika Teslim</option>
+                                <option value="Kargo">Kargo</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>KDV Oranı (%)</label>
+                            <input type="number" id="orderKdvOrani" value="20" min="0" max="100" step="1" oninput="calcGrandTotal()">
+                        </div>
+                    </div>
+
+                    <hr style="margin:1.5rem 0;border:none;border-top:1px solid var(--border);">
+
+                    <h3 style="margin-bottom:1rem;font-size:1rem;">3. Ürünler</h3>
+                    <div id="orderProducts"></div>
+                    <button class="btn btn-outline btn-sm mt-2" onclick="addProductRow()">+ Ürün Ekle</button>
+
+                    <!-- TOPLAM KUTUSU -->
+                    <div class="totals-box">
+                        <div class="row">
+                            <span>Ara Toplam (KDV Hariç)</span>
+                            <span id="orderAraToplam">0,00 ₺</span>
+                        </div>
+                        <div class="row">
+                            <span>KDV (<span id="orderKdvLabel">20</span>%)</span>
+                            <span id="orderKdvTutari">0,00 ₺</span>
+                        </div>
+                        <div class="row grand">
+                            <span>Genel Toplam</span>
+                            <span id="orderGrandTotal">0,00 ₺</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <button class="btn btn-success" id="btnCreateOrder" onclick="createOrder()">
+                            Siparişi Oluştur ve Mail Gönder
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SİPARİŞLER -->
+        <div id="tab-orders" class="tab-content hidden">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Sipariş Listesi</h2>
+                    <div class="flex gap-2">
+                        <button class="btn btn-primary btn-sm" id="btnSyncGitHub" onclick="syncAllOrdersFromGitHub()">
+                            🔄 GitHub'dan Durumları Yenile
+                        </button>
+                        <button class="btn btn-danger btn-sm" id="btnDeleteAllOrders" onclick="deleteAllOrders()" style="display:none;">
+                            Tüm Siparişleri Sil
+                        </button>
+                        <button class="btn btn-outline btn-sm" id="btnExportXLS" onclick="exportOrdersXLS()" style="display:none;">
+                            XLS İndir
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info" id="syncStatusInfo" style="display:none; margin-bottom:1rem;"></div>
+                    <div class="grid-3" style="margin-bottom:1rem;">
+                        <div class="form-group">
+                            <label>Başlangıç Tarihi</label>
+                            <input type="date" id="filterDateStart" onchange="renderOrders()">
+                        </div>
+                        <div class="form-group">
+                            <label>Bitiş Tarihi</label>
+                            <input type="date" id="filterDateEnd" onchange="renderOrders()">
+                        </div>
+                        <div class="form-group">
+                            <label>Alıcı</label>
+                            <select id="filterCustomer" onchange="renderOrders()">
+                                <option value="">Tümü</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Durum</label>
+                            <select id="filterStatus" onchange="renderOrders()">
+                                <option value="">Tümü</option>
+                                <option value="Beklemede">Beklemede</option>
+                                <option value="Onaylandı">Onaylandı</option>
+                                <option value="Reddedildi">Reddedildi</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="display:flex; align-items:flex-end; gap:0.5rem;">
+                            <button class="btn btn-outline btn-sm" onclick="clearOrderFilters()">Filtreleri Temizle</button>
+                        </div>
+                    </div>
+                    <div style="overflow-x:auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Sipariş No</th><th>Tarih</th><th>Alıcı</th><th>Oluşturan</th><th>Tutar</th><th>Durum</th><th>İşlem</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ordersTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ALICI ONAY -->
+        <div id="tab-buyerView" class="tab-content hidden">
+            <div class="card">
+                <div class="card-header"><h2>Alıcı Onay / Ret Ekranı</h2></div>
+                <div class="card-body">
+                    <div class="alert alert-info" id="buyerNotice">
+                        Mailinizdeki bağlantıya tıkladıysanız sipariş otomatik yüklenecektir.<br>
+                        Manuel olarak da sipariş numarasını yazıp <strong>Getir</strong> butonuna basabilirsiniz.
+                    </div>
+                    <div class="form-group" id="buyerSearchBox">
+                        <label>Sipariş Numarası</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="buyerOrderNo" placeholder="Örn: SIP-20261109-001">
+                            <button class="btn btn-primary" onclick="loadBuyerOrder()">Getir</button>
+                        </div>
+                    </div>
+                    <div id="buyerOrderDetail" class="hidden mt-3"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- KULLANICILAR (SADECE SÜPERVİZÖR/ADMİN) -->
+        <div id="tab-users" class="tab-content hidden">
+            <div class="card">
+                <div class="card-header"><h2>Yeni Kullanıcı Ekle / Güncelle</h2></div>
+                <div class="card-body">
+                    <div class="grid-3">
+                        <div class="form-group">
+                            <label>Kullanıcı Adı *</label>
+                            <input type="text" id="newUsername">
+                        </div>
+                        <div class="form-group">
+                            <label>Şifre *</label>
+                            <input type="password" id="newUserPass">
+                        </div>
+                        <div class="form-group">
+                            <label>Rol</label>
+                            <select id="newUserRole">
+                                <option value="satis_elemani">Satış Elemanı</option>
+                                <option value="satis_muduru">Satış Müdürü</option>
+                                <option value="muhasebe_muduru">Muhasebe Müdürü</option>
+                                <option value="sevkiyat_sorumlusu">Sevkiyat Sorumlusu</option>
+                                <option value="admin">Süpervizör (Admin)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="saveUser()">Kullanıcıyı Kaydet</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header"><h2>Sistem Kullanıcıları</h2></div>
+                <div class="card-body" style="overflow-x:auto;">
+                    <table>
+                        <thead>
+                            <tr><th>Kullanıcı Adı</th><th>Rol</th><th>Şifre</th><th>İşlem</th></tr>
+                        </thead>
+                        <tbody id="usersTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- AYARLAR (SADECE SÜPERVİZÖR/ADMİN) -->
+        <div id="tab-settings" class="tab-content hidden">
+            <div class="card">
+                <div class="card-header"><h2>EmailJS Ayarları (Mail Göndermek İçin)</h2></div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        Mail gönderebilmek için <a href="https://www.emailjs.com" target="_blank">emailjs.com</a> üzerinden ücretsiz hesap açıp aşağıdaki bilgileri girmeniz gerekir.<br><br>
+                        <strong>EmailJS Şablonunuza Ekleyebileceğiniz Buton Kodu:</strong><br>
+                        <code style="background:#e2e8f0; padding:4px; display:block; margin-top:5px; font-size: 0.8rem;">
+                            &lt;a href="{{approval_link}}" target="_blank" style="background-color: #059669; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;"&gt;Siparişi İncele, Onayla veya Reddet&lt;/a&gt;
+                        </code>
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Public Key</label>
+                            <input type="text" id="ejPublicKey" placeholder="IJSc2K52mwkPMWynb">
+                        </div>
+                        <div class="form-group">
+                            <label>Service ID</label>
+                            <input type="text" id="ejServiceId" placeholder="service_xxxxxxx">
+                        </div>
+                        <div class="form-group">
+                            <label>Template ID</label>
+                            <input type="text" id="ejTemplateId" placeholder="template_xxxxxxx">
+                        </div>
+                        <div class="form-group">
+                            <label>Satıcı Firma Adı</label>
+                            <input type="text" id="sellerCompany" placeholder="KBR Piknik">
+                        </div>
+                        <div class="form-group">
+                            <label>Satıcı Mail Adresi</label>
+                            <input type="email" id="sellerEmail" placeholder="mehmetkarahan279@gmail.com">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GITHUB ENTEGRASYON AYARLARI -->
+            <div class="card">
+                <div class="card-header"><h2>GitHub Entegrasyonu (Siparişleri Otomatik Depolamak İçin)</h2></div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        Siparişlerin GitHub reponuzda JSON dosyası olarak saklanabilmesi için GitHub Personal Access Token (PAT) bilgilerinizi giriniz.
+                    </div>
+                    <div class="grid-3">
+                        <div class="form-group">
+                            <label>GitHub Personal Access Token (PAT)</label>
+                            <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxx">
+                        </div>
+                        <div class="form-group">
+                            <label>GitHub Repo Adı (KullanıcıAdı/RepoAdı)</label>
+                            <input type="text" id="ghRepo" placeholder="ornekKullanici/siparis-repo">
+                        </div>
+                        <div class="form-group">
+                            <label>GitHub Dalı (Branch)</label>
+                            <input type="text" id="ghBranch" placeholder="main">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="saveSettings()">Tüm Ayarları Kaydet</button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<!-- DETAY MODAL -->
+<div id="orderModal" class="modal-overlay hidden">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 id="modalTitle">Sipariş Detayı</h3>
+            <button class="btn btn-outline btn-sm" onclick="closeModal()">✕</button>
+        </div>
+        <div class="modal-body" id="modalBody"></div>
+        <div class="modal-footer" id="modalFooter"></div>
+    </div>
+</div>
+
+<script>
+const STORAGE = {
+    products: 'sms_products',
+    customers: 'sms_customers',
+    orders: 'sms_orders',
+    settings: 'sms_settings',
+    users: 'sms_users'
+};
+
+// Cloudflare Worker proxy URL (alıcı onaylarının GitHub'a yazılması için)
+const APPROVAL_PROXY_URL = 'https://silent-sky.mehmetkarahan279.workers.dev';
+
+
+const ROLE_PERMISSIONS = {
+    admin: {
+        tabs: ['dashboard', 'products', 'customers', 'newOrder', 'orders', 'users', 'settings'],
+        canEditProducts: true,
+        canSeeAllCustomers: true,
+        canSeeAllOrders: true,
+        canCreateOrder: true,
+        canApproveOrder: true,
+        canDeleteAllOrders: true,
+        canExportXLS: true
+    },
+    satis_muduru: {
+        tabs: ['dashboard', 'products', 'customers', 'newOrder', 'orders'],
+        canEditProducts: false,
+        canSeeAllCustomers: true,
+        canSeeAllOrders: true,
+        canCreateOrder: true,
+        canApproveOrder: true,
+        canDeleteAllOrders: false,
+        canExportXLS: true
+    },
+    satis_elemani: {
+        tabs: ['dashboard', 'products', 'customers', 'newOrder', 'orders'],
+        canEditProducts: false,
+        canSeeAllCustomers: false,
+        canSeeAllOrders: false,
+        canCreateOrder: true,
+        canApproveOrder: false,
+        canDeleteAllOrders: false,
+        canExportXLS: false
+    },
+    muhasebe_muduru: {
+        tabs: ['dashboard', 'products', 'customers', 'newOrder', 'orders', 'users', 'settings'],
+        canEditProducts: true,
+        canSeeAllCustomers: true,
+        canSeeAllOrders: true,
+        canCreateOrder: true,
+        canApproveOrder: true,
+        canDeleteAllOrders: true,
+        canExportXLS: true
+    },
+    sevkiyat_sorumlusu: {
+        tabs: ['dashboard', 'orders'],
+        canEditProducts: false,
+        canSeeAllCustomers: false,
+        canSeeAllOrders: true,
+        canCreateOrder: false,
+        canApproveOrder: false,
+        canDeleteAllOrders: false,
+        canExportXLS: true
+    }
+};
+
+function hasPermission(action) {
+    if (!currentUser) return false;
+    const perms = ROLE_PERMISSIONS[currentUser.role] || ROLE_PERMISSIONS.satis_elemani;
+    return !!perms[action];
+}
+
+function canAccessTab(tabId) {
+    // Alıcı onay linkinden geliyorsa giriş yapmadan izin ver
+    if (tabId === 'buyerView' && (location.hash.startsWith('#approve/') || location.hash === '#buyerView')) {
+        return true;
+    }
+    if (!currentUser) return false;
+    const perms = ROLE_PERMISSIONS[currentUser.role] || ROLE_PERMISSIONS.satis_elemani;
+    return perms.tabs.includes(tabId);
+}
+
+function getRoleName(role) {
+    const names = {
+        'admin': 'Süpervizör',
+        'satis_muduru': 'Satış Müdürü',
+        'satis_elemani': 'Satış Elemanı',
+        'muhasebe_muduru': 'Muhasebe Müdürü',
+        'sevkiyat_sorumlusu': 'Sevkiyat Sorumlusu',
+        'user': 'Kullanıcı'
+    };
+    return names[role] || role || 'Kullanıcı';
+}
+
+
+let currentUser = null;
+let currentLoadedBuyerOrder = null;
+
+// localStorage erişimi sandbox / file:// ortamında engellenebiliyor.
+// Bu yüzden güvenli bir sarmalayıcı + bellek yedeklemesi kullanıyoruz.
+const _memoryStore = {};
+let _storageAvailable = null;
+
+function isStorageAvailable() {
+    if (_storageAvailable !== null) return _storageAvailable;
+    try {
+        const testKey = '__sms_storage_test__';
+        localStorage.setItem(testKey, '1');
+        localStorage.removeItem(testKey);
+        _storageAvailable = true;
+    } catch (e) {
+        _storageAvailable = false;
+        console.warn('localStorage kullanılamıyor, bellek moduna geçildi.', e);
+    }
+    return _storageAvailable;
+}
+
+function safeGetItem(key) {
+    try {
+        if (isStorageAvailable()) {
+            return localStorage.getItem(key);
+        }
+    } catch (e) { }
+    return _memoryStore[key] !== undefined ? _memoryStore[key] : null;
+}
+
+function safeSetItem(key, value) {
+    try {
+        if (isStorageAvailable()) {
+            localStorage.setItem(key, value);
+            return;
+        }
+    } catch (e) { }
+    _memoryStore[key] = value;
+}
+
+function safeRemoveItem(key) {
+    try {
+        if (isStorageAvailable()) {
+            localStorage.removeItem(key);
+        }
+    } catch (e) { }
+    delete _memoryStore[key];
+}
+
+// sessionStorage için de aynı koruma
+const _memorySession = {};
+let _sessionAvailable = null;
+
+function isSessionAvailable() {
+    if (_sessionAvailable !== null) return _sessionAvailable;
+    try {
+        const testKey = '__sms_session_test__';
+        sessionStorage.setItem(testKey, '1');
+        sessionStorage.removeItem(testKey);
+        _sessionAvailable = true;
+    } catch (e) {
+        _sessionAvailable = false;
+    }
+    return _sessionAvailable;
+}
+
+function safeSessionGet(key) {
+    try {
+        if (isSessionAvailable()) return sessionStorage.getItem(key);
+    } catch (e) { }
+    return _memorySession[key] !== undefined ? _memorySession[key] : null;
+}
+
+function safeSessionSet(key, value) {
+    try {
+        if (isSessionAvailable()) {
+            sessionStorage.setItem(key, value);
+            return;
+        }
+    } catch (e) { }
+    _memorySession[key] = value;
+}
+
+function safeSessionRemove(key) {
+    try {
+        if (isSessionAvailable()) sessionStorage.removeItem(key);
+    } catch (e) { }
+    delete _memorySession[key];
+}
+
+function getData(key) {
+    try {
+        const raw = safeGetItem(key);
+        if (!raw) return [];
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+    } catch { return []; }
+}
+
+function setData(key, data) {
+    try {
+        safeSetItem(key, JSON.stringify(data));
+    } catch (e) {
+        console.warn('Veri kaydedilemedi:', key, e);
+    }
+}
+
+function getSettings() {
+    try {
+        const s = safeGetItem(STORAGE.settings);
+        return s ? JSON.parse(s) : {};
+    } catch { return {}; }
+}
+
+function getUserCustomers() {
+    const all = getData(STORAGE.customers);
+    if (!currentUser) return [];
+    if (hasPermission('canSeeAllCustomers')) return all;
+    return all.filter(c => c.createdUser === currentUser.username);
+}
+
+function getUserOrders() {
+    const all = getData(STORAGE.orders);
+    if (!currentUser) return [];
+    if (hasPermission('canSeeAllOrders')) return all;
+    return all.filter(o => o.createdUser === currentUser.username);
+}
+
+function initDefaultUsers() {
+    let users = getData(STORAGE.users);
+    const adminIdx = users.findIndex(u => u.username && u.username.toLowerCase() === 'admin');
+    if (adminIdx === -1) {
+        users.push({ username: 'admin', pass: '1234', role: 'admin' });
+        setData(STORAGE.users, users);
+    } else {
+        if (users[adminIdx].pass !== '1234' || users[adminIdx].role !== 'admin') {
+            users[adminIdx].pass = '1234';
+            users[adminIdx].role = 'admin';
+            setData(STORAGE.users, users);
+        }
+    }
+}
+
+function saveSession() {
+    if (currentUser) {
+        safeSessionSet('sms_currentUser', JSON.stringify(currentUser));
+    } else {
+        safeSessionRemove('sms_currentUser');
+    }
+}
+
+function enterApp(user) {
+    currentUser = user;
+    saveSession();
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('app').classList.remove('hidden');
+
+    // Nav ve header görünür olsun (buyerView gizlemesi için)
+    const mainNav = document.getElementById('mainNavTabs');
+    const headerUserArea = document.getElementById('headerUserArea');
+    if (mainNav) mainNav.classList.remove('hidden');
+    if (headerUserArea) headerUserArea.classList.remove('hidden');
+
+    document.getElementById('currentUserDisplay').textContent =
+        `${currentUser.username} (${getRoleName(currentUser.role)})`;
+
+    // Rol bazlı sekme ve buton görünürlüğü
+    document.querySelectorAll('.nav-tab').forEach(btn => {
+        const tab = btn.dataset.tab;
+        if (canAccessTab(tab)) {
+            btn.classList.remove('hidden');
+        } else {
+            btn.classList.add('hidden');
+        }
+    });
+
+    // Admin-only elementler (ürün yükleme, silme vb.)
+    document.querySelectorAll('.admin-only').forEach(el => {
+        if (currentUser.role === 'admin') {
+            el.classList.remove('hidden');
+        } else {
+            el.classList.add('hidden');
+        }
+    });
+
+    // Tüm sekmeleri gizle, dashboard göster
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+    document.getElementById('tab-dashboard').classList.remove('hidden');
+    const dashBtn = document.querySelector('.nav-tab[data-tab="dashboard"]');
+    if (dashBtn) dashBtn.classList.add('active');
+
+    initApp();
+}
+
+function login() {
+    initDefaultUsers();
+    const userVal = document.getElementById('loginUser').value.trim();
+    const passVal = document.getElementById('loginPass').value;
+    const users = getData(STORAGE.users);
+
+    const foundUser = users.find(u =>
+        u.username.toLowerCase() === userVal.toLowerCase() && u.pass === passVal
+    );
+
+    if (foundUser) {
+        enterApp(foundUser);
+    } else {
+        alert('Hatalı kullanıcı adı veya şifre!');
+    }
+}
+
+function logout() {
+    currentUser = null;
+    saveSession();
+    document.getElementById('loginUser').value = '';
+    document.getElementById('loginPass').value = '';
+    document.getElementById('app').classList.add('hidden');
+    document.getElementById('loginScreen').classList.remove('hidden');
+}
+
+function saveUser() {
+    if (!currentUser || currentUser.role !== 'admin') {
+        alert('Bu işlem için Süpervizör yetkisi gereklidir.');
+        return;
+    }
+
+    const username = document.getElementById('newUsername').value.trim();
+    const pass = document.getElementById('newUserPass').value.trim();
+    const role = document.getElementById('newUserRole').value;
+
+    if (!username || !pass) {
+        alert('Lütfen kullanıcı adı ve şifre girin.');
+        return;
+    }
+
+    let users = getData(STORAGE.users);
+    const existingIndex = users.findIndex(u => u.username.toLowerCase() === username.toLowerCase());
+
+    if (existingIndex >= 0) {
+        users[existingIndex].pass = pass;
+        users[existingIndex].role = role;
+        alert(`${username} kullanıcısının şifresi ve rolü güncellendi.`);
+    } else {
+        users.push({ username, pass, role });
+        alert(`${username} kullanıcısı oluşturuldu.`);
+    }
+
+    setData(STORAGE.users, users);
+    document.getElementById('newUsername').value = '';
+    document.getElementById('newUserPass').value = '';
+    renderUsers();
+}
+
+function deleteUser(idx) {
+    if (!currentUser || currentUser.role !== 'admin') return;
+    let users = getData(STORAGE.users);
+    
+    if (users[idx].username === currentUser.username) {
+        alert('Aktif olarak oturum açtığınız kendi hesabınızı silemezsiniz.');
+        return;
+    }
+
+    if (!confirm(`${users[idx].username} kullanıcısını silmek istediğinize emin misiniz?`)) return;
+    
+    users.splice(idx, 1);
+    setData(STORAGE.users, users);
+    renderUsers();
+}
+
+function renderUsers() {
+    if (!currentUser || currentUser.role !== 'admin') return;
+    const users = getData(STORAGE.users);
+    const tbody = document.getElementById('usersTable');
+    if (users.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="empty-state">Henüz kullanıcı tanımlanmadı.</td></tr>`;
+        return;
+    }
+    tbody.innerHTML = users.map((u, i) => `
+        <tr>
+            <td><strong>${u.username}</strong></td>
+            <td><span class="badge ${u.role === 'admin' ? 'badge-approved' : 'badge-pending'}">${getRoleName(u.role)}</span></td>
+            <td>••••••••</td>
+            <td><button class="btn btn-danger btn-sm" onclick="deleteUser(${i})">Sil</button></td>
+        </tr>
+    `).join('');
+}
+
+function showTab(tabId) {
+    if (!canAccessTab(tabId)) {
+        alert('Bu bölüme erişim yetkiniz yok.');
+        return;
+    }
+
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+    document.getElementById('tab-' + tabId).classList.remove('hidden');
+    const tabBtn = document.querySelector(`.nav-tab[data-tab="${tabId}"]`);
+    if (tabBtn) tabBtn.classList.add('active');
+
+    if (tabId === 'dashboard') updateDashboard();
+    if (tabId === 'products') renderProducts();
+    if (tabId === 'customers') {
+        renderCustomers();
+        if (document.getElementById('custAddresses').children.length === 0) {
+            addAddressField();
+        }
+    }
+    if (tabId === 'newOrder') {
+        populateCustomerSelect();
+        if (document.getElementById('orderProducts').children.length === 0) addProductRow();
+    }
+    if (tabId === 'orders') {
+        populateOrderFilterCustomers();
+        renderOrders();
+        updateOrderActionButtons();
+        // Sayfa açılınca otomatik GitHub'dan durumları çek
+        setTimeout(() => syncAllOrdersFromGitHub(), 500);
+    }
+    if (tabId === 'users') renderUsers();
+    if (tabId === 'settings') loadSettingsForm();
+}
+
+function loadSettingsForm() {
+    const s = getSettings();
+    document.getElementById('ejPublicKey').value = s.publicKey || '';
+    document.getElementById('ejServiceId').value = s.serviceId || '';
+    document.getElementById('ejTemplateId').value = s.templateId || '';
+    document.getElementById('sellerCompany').value = s.sellerCompany || '';
+    document.getElementById('sellerEmail').value = s.sellerEmail || '';
+    document.getElementById('ghToken').value = s.githubToken || '';
+    document.getElementById('ghRepo').value = s.githubRepo || '';
+    document.getElementById('ghBranch').value = s.githubBranch || 'main';
+}
+
+function saveSettings() {
+    const settings = {
+        publicKey: document.getElementById('ejPublicKey').value.trim(),
+        serviceId: document.getElementById('ejServiceId').value.trim(),
+        templateId: document.getElementById('ejTemplateId').value.trim(),
+        sellerCompany: document.getElementById('sellerCompany').value.trim(),
+        sellerEmail: document.getElementById('sellerEmail').value.trim(),
+        githubToken: document.getElementById('ghToken').value.trim(),
+        githubRepo: document.getElementById('ghRepo').value.trim(),
+        githubBranch: document.getElementById('ghBranch').value.trim() || 'main'
+    };
+    safeSetItem(STORAGE.settings, JSON.stringify(settings));
+    if (settings.publicKey && typeof emailjs !== 'undefined') {
+        try { emailjs.init(settings.publicKey); } catch (e) { }
+    }
+    alert('Ayarlar kaydedildi!');
+}
+
+function fixTurkishMojibake(text) {
+    if (!text) return text;
+    let fixed = text;
+    // Direct replacements for common broken sequences
+    const map = {
+        'Ã‡': 'Ç', 'Ã§': 'ç',
+        'Ã–': 'Ö', 'Ã¶': 'ö',
+        'Ãœ': 'Ü', 'Ã¼': 'ü',
+        'Ä°': 'İ', 'Ä±': 'ı',
+        'Åž': 'Ş', 'ÅŸ': 'ş',
+        'Äž': 'Ğ', 'ÄŸ': 'ğ',
+        'Ã‚': 'Â', 'Ã¢': 'â',
+        'KAÃIT': 'KAĞIT', 'KAÄIT': 'KAĞIT',
+        'LÄ°': 'Lİ', 'LÃ°': 'Lİ',
+        'Ã': '', 'Ä': '', 'Å': ''
+    };
+    for (const [bad, good] of Object.entries(map)) {
+        fixed = fixed.split(bad).join(good);
+    }
+    return fixed;
+}
+
+function decodeCSVText(buffer) {
+    // Önce UTF-8 dene
+    let text = '';
+    try {
+        text = new TextDecoder('utf-8', { fatal: false }).decode(buffer);
+    } catch (e) {
+        text = '';
+    }
+
+    // Eğer bozuk görünüyorsa windows-1254 dene
+    if (!text || text.includes('Ã') || text.includes('Ä') || text.includes('Å')) {
+        try {
+            const win = new TextDecoder('windows-1254').decode(buffer);
+            if (win && !win.includes('Ã')) text = win;
+        } catch (e) {}
+    }
+
+    return fixTurkishMojibake(text || '');
+}
+
+function parseTRNumber(str) {
+    if (str == null || str === '') return 0;
+    let s = String(str).trim().replace(/\s/g, '');
+    if (s.includes(',')) {
+        s = s.replace(/\./g, '').replace(',', '.');
+    }
+    return parseFloat(s) || 0;
+}
+
+function loadCSV(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+
+    reader.onload = function(ev) {
+        const buffer = ev.target.result;
+        const text = decodeCSVText(buffer);
+        const lines = text.split(/\r?\n/).filter(l => l.trim());
+        let products = getData(STORAGE.products);
+
+        let added = 0;
+        lines.forEach((line, idx) => {
+            if (idx === 0 && (line.toLowerCase().includes('kod') || line.toLowerCase().includes('ürün') || line.toLowerCase().includes('urun'))) return;
+            const parts = line.split(/[;,]/).map(p => p.trim().replace(/^"|"$/g, ''));
+            if (parts.length < 7) return;
+            const [kod, aciklama, barkod, paket, koli, palet, fiyat] = parts;
+            if (!kod) return;
+            const existing = products.findIndex(p => p.kod === kod);
+            const item = {
+                kod,
+                aciklama: aciklama || '',
+                barkod: barkod || '',
+                paketIci: parseTRNumber(paket),
+                koliIci: parseTRNumber(koli),
+                paletIci: parseTRNumber(palet),
+                fiyat: parseTRNumber(fiyat)
+            };
+            if (existing >= 0) products[existing] = item;
+            else { products.push(item); added++; }
+        });
+        setData(STORAGE.products, products);
+        renderProducts();
+        alert(`${added} yeni ürün eklendi. Toplam: ${products.length}`);
+        e.target.value = '';
+    };
+    reader.readAsArrayBuffer(file);
+}
+
+function renderProducts() {
+    const products = getData(STORAGE.products);
+    const tbody = document.getElementById('productsTable');
+    if (products.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="empty-state">Henüz ürün yüklenmedi.</td></tr>`;
+        return;
+    }
+    const isAdmin = currentUser && currentUser.role === 'admin';
+    tbody.innerHTML = products.map((p, i) => `
+        <tr>
+            <td><strong>${p.kod}</strong></td>
+            <td>${p.aciklama}</td>
+            <td>${p.barkod}</td>
+            <td>${p.paketIci}</td>
+            <td>${p.koliIci}</td>
+            <td>${p.paletIci}</td>
+            <td>${formatMoney(p.fiyat)}</td>
+            <td>${isAdmin ? `<button class="btn btn-danger btn-sm" onclick="deleteProduct(${i})">Sil</button>` : ''}</td>
+        </tr>
+    `).join('');
+}
+
+function deleteProduct(idx) {
+    if (!currentUser || currentUser.role !== 'admin') return;
+    if (!confirm('Bu ürünü silmek istediğinize emin misiniz?')) return;
+    let products = getData(STORAGE.products);
+    products.splice(idx, 1);
+    setData(STORAGE.products, products);
+    renderProducts();
+}
+
+function clearProducts() {
+    if (!currentUser || currentUser.role !== 'admin') return;
+    if (!confirm('Tüm ürünler silinecek. Emin misiniz?')) return;
+    setData(STORAGE.products, []);
+    renderProducts();
+}
+
+function addAddressField(value = '') {
+    const container = document.getElementById('custAddresses');
+    const count = container.querySelectorAll('.address-item').length;
+    if (count >= 15) {
+        alert('En fazla 15 adres ekleyebilirsiniz.');
+        return;
+    }
+    const div = document.createElement('div');
+    div.className = 'address-item flex gap-2 mt-2';
+    div.innerHTML = `
+        <textarea class="cust-address-input" rows="2" placeholder="Teslimat adresi ${count + 1}" style="flex:1;">${value || ''}</textarea>
+        <button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove()" style="align-self:start;">✕</button>
+    `;
+    container.appendChild(div);
+}
+
+function getAddressValues() {
+    return Array.from(document.querySelectorAll('.cust-address-input'))
+        .map(el => el.value.trim())
+        .filter(v => v.length > 0);
+}
+
+function resetCustomerForm() {
+    document.getElementById('custEditId').value = '';
+    document.getElementById('custTitle').value = '';
+    document.getElementById('custContact').value = '';
+    document.getElementById('custEmail').value = '';
+    document.getElementById('custPhone').value = '';
+    document.getElementById('custVade').value = '30';
+    document.getElementById('custAddresses').innerHTML = '';
+    addAddressField();
+    document.getElementById('customerFormTitle').textContent = 'Yeni Alıcı Kaydet';
+    document.getElementById('btnSaveCustomer').textContent = 'Alıcıyı Kaydet';
+    document.getElementById('btnCancelEdit').classList.add('hidden');
+}
+
+function cancelEditCustomer() {
+    resetCustomerForm();
+}
+
+function saveCustomer() {
+    const title = document.getElementById('custTitle').value.trim();
+    const contact = document.getElementById('custContact').value.trim();
+    const email = document.getElementById('custEmail').value.trim();
+    const phone = document.getElementById('custPhone').value.trim();
+    const vade = parseInt(document.getElementById('custVade').value) || 30;
+    const addresses = getAddressValues();
+    const editId = document.getElementById('custEditId').value;
+
+    if (!title || !contact || !email || !phone) {
+        alert('Lütfen ünvan, yetkili, mail ve telefon alanlarını doldurun.');
+        return;
+    }
+    if (addresses.length === 0) {
+        alert('En az bir teslimat adresi girmeniz gerekir.');
+        return;
+    }
+
+    let customers = getData(STORAGE.customers);
+
+    if (editId) {
+        const idx = customers.findIndex(c => c.id == editId);
+        if (idx < 0) {
+            alert('Düzenlenecek alıcı bulunamadı.');
+            return;
+        }
+        if (currentUser.role !== 'admin' && customers[idx].createdUser !== currentUser.username) {
+            alert('Başka bir kullanıcının kaydettiği alıcıyı düzenleyemezsiniz.');
+            return;
+        }
+        customers[idx] = {
+            ...customers[idx],
+            title,
+            contact,
+            email,
+            phone,
+            vade,
+            addresses,
+            address: addresses[0]
+        };
+        setData(STORAGE.customers, customers);
+        alert('Alıcı bilgileri güncellendi.');
+    } else {
+        customers.push({
+            id: Date.now(),
+            title,
+            contact,
+            email,
+            phone,
+            vade,
+            addresses,
+            address: addresses[0],
+            createdUser: currentUser ? currentUser.username : 'admin'
+        });
+        setData(STORAGE.customers, customers);
+        alert('Alıcı kaydedildi.');
+    }
+
+    resetCustomerForm();
+    renderCustomers();
+}
+
+function editCustomer(id) {
+    const customers = getData(STORAGE.customers);
+    const c = customers.find(x => x.id == id);
+    if (!c) return;
+
+    if (currentUser.role !== 'admin' && c.createdUser !== currentUser.username) {
+        alert('Başka bir kullanıcının kaydettiği alıcıyı düzenleyemezsiniz.');
+        return;
+    }
+
+    document.getElementById('custEditId').value = c.id;
+    document.getElementById('custTitle').value = c.title || '';
+    document.getElementById('custContact').value = c.contact || '';
+    document.getElementById('custEmail').value = c.email || '';
+    document.getElementById('custPhone').value = c.phone || '';
+    document.getElementById('custVade').value = c.vade != null ? c.vade : 30;
+
+    const container = document.getElementById('custAddresses');
+    container.innerHTML = '';
+    const addrs = (c.addresses && c.addresses.length) ? c.addresses : (c.address ? [c.address] : ['']);
+    addrs.forEach(a => addAddressField(a));
+
+    document.getElementById('customerFormTitle').textContent = 'Alıcıyı Düzenle';
+    document.getElementById('btnSaveCustomer').textContent = 'Değişiklikleri Kaydet';
+    document.getElementById('btnCancelEdit').classList.remove('hidden');
+
+    document.getElementById('customerFormTitle').scrollIntoView({ behavior: 'smooth' });
+}
+
+function renderCustomers() {
+    const customers = getUserCustomers();
+    const tbody = document.getElementById('customersTable');
+    if (customers.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="empty-state">Kayıtlı alıcı bulunamadı.</td></tr>`;
+        return;
+    }
+    tbody.innerHTML = customers.map((c) => {
+        const addrCount = (c.addresses && c.addresses.length) ? c.addresses.length : (c.address ? 1 : 0);
+        const vadeText = c.vade != null ? c.vade + ' gün' : '-';
+        return `
+        <tr>
+            <td><strong>${c.title}</strong></td>
+            <td>${c.contact}</td>
+            <td>${c.email}</td>
+            <td>${c.phone}</td>
+            <td>${vadeText}</td>
+            <td>${addrCount}</td>
+            <td><small class="text-muted">${c.createdUser || 'admin'}</small></td>
+            <td>
+                <button class="btn btn-outline btn-sm" onclick="editCustomer(${c.id})">Düzenle</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteCustomer(${c.id})">Sil</button>
+            </td>
+        </tr>`;
+    }).join('');
+}
+
+function deleteCustomer(id) {
+    if (!confirm('Bu alıcıyı silmek istediğinize emin misiniz?')) return;
+    let customers = getData(STORAGE.customers);
+    const idx = customers.findIndex(c => c.id === id);
+    if (idx >= 0) {
+        if (currentUser.role !== 'admin' && customers[idx].createdUser !== currentUser.username) {
+            alert('Başka bir kullanıcının kaydettiği alıcıyı silemezsiniz.');
+            return;
+        }
+        customers.splice(idx, 1);
+        setData(STORAGE.customers, customers);
+        renderCustomers();
+    }
+}
+
+function populateCustomerSelect() {
+    const customers = getUserCustomers();
+    const sel = document.getElementById('orderCustomerSelect');
+    sel.innerHTML = '<option value="">-- Yeni / Seçiniz --</option>' +
+        customers.map(c => `<option value="${c.id}">${c.title}</option>`).join('');
+}
+
+function populateOrderFilterCustomers() {
+    const customers = getUserCustomers();
+    const sel = document.getElementById('filterCustomer');
+    if(!sel) return;
+    sel.innerHTML = '<option value="">Tümü</option>' +
+        customers.map(c => `<option value="${c.title}">${c.title}</option>`).join('');
+}
+
+function fillCustomer() {
+    const id = document.getElementById('orderCustomerSelect').value;
+    if (!id) return;
+    const c = getUserCustomers().find(x => x.id == id);
+    if (!c) return;
+    document.getElementById('orderCustTitle').value = c.title;
+    document.getElementById('orderCustContact').value = c.contact;
+    document.getElementById('orderCustEmail').value = c.email;
+    document.getElementById('orderCustPhone').value = c.phone;
+    document.getElementById('orderVade').value = c.vade != null ? c.vade : 30;
+
+    const addrSelect = document.getElementById('orderDeliveryAddressSelect');
+    const addresses = (c.addresses && c.addresses.length) ? c.addresses : (c.address ? [c.address] : []);
+    if (addrSelect) {
+        if (addresses.length === 0) {
+            addrSelect.innerHTML = '<option value="">Bu alıcının kayıtlı adresi yok</option>';
+            document.getElementById('orderDeliveryAddress').value = '';
+        } else {
+            addrSelect.innerHTML = '<option value="">-- Adres seçin --</option>' +
+                addresses.map((a, i) => `<option value="${i}">${a.substring(0, 80)}${a.length > 80 ? '...' : ''}</option>`).join('');
+            // İlk adresi otomatik seç
+            addrSelect.value = '0';
+            document.getElementById('orderDeliveryAddress').value = addresses[0];
+        }
+    }
+}
+
+function onDeliveryAddressSelect() {
+    const id = document.getElementById('orderCustomerSelect').value;
+    if (!id) return;
+    const c = getUserCustomers().find(x => x.id == id);
+    if (!c) return;
+    const addresses = (c.addresses && c.addresses.length) ? c.addresses : (c.address ? [c.address] : []);
+    const idx = parseInt(document.getElementById('orderDeliveryAddressSelect').value) || 0;
+    document.getElementById('orderDeliveryAddress').value = addresses[idx] || '';
+}
+
+let productRowCounter = 0;
+function addProductRow() {
+    const products = getData(STORAGE.products);
+    if (products.length === 0) {
+        alert('Önce ürün yüklemeniz gerekiyor.');
+        return;
+    }
+    const container = document.getElementById('orderProducts');
+    const rowId = productRowCounter++;
+    const div = document.createElement('div');
+    div.className = 'product-row';
+    div.id = `prodRow_${rowId}`;
+    div.innerHTML = `
+        <div>
+            <label>Ürün Kodu</label>
+            <select onchange="onProductSelect(${rowId}, this.value)">
+                <option value="">Seçiniz</option>
+                ${products.map(p => `<option value="${p.kod}">${p.kod} - ${p.aciklama}</option>`).join('')}
+            </select>
+        </div>
+        <div><label>Miktar</label><input type="number" id="qty_${rowId}" value="1" min="1" oninput="calcRow(${rowId})"></div>
+        <div><label>Birim Fiyat</label><input type="text" id="price_${rowId}" readonly value="0"></div>
+        <div><label>İsk1 %</label><input type="number" id="isk1_${rowId}" value="0" min="0" max="100" step="0.01" oninput="calcRow(${rowId})"></div>
+        <div><label>İsk2 %</label><input type="number" id="isk2_${rowId}" value="0" min="0" max="100" step="0.01" oninput="calcRow(${rowId})"></div>
+        <div><label>İsk3 %</label><input type="number" id="isk3_${rowId}" value="0" min="0" max="100" step="0.01" oninput="calcRow(${rowId})"></div>
+        <div><label>İsk4 %</label><input type="number" id="isk4_${rowId}" value="0" min="0" max="100" step="0.01" oninput="calcRow(${rowId})"></div>
+        <div><label>İsk5 %</label><input type="number" id="isk5_${rowId}" value="0" min="0" max="100" step="0.01" oninput="calcRow(${rowId})"></div>
+        <div><label>Tutar</label><input type="text" id="total_${rowId}" readonly value="0,00"></div>
+        <div style="align-self:end;"><button class="btn btn-danger btn-sm" onclick="removeProductRow(${rowId})">✕</button></div>
+    `;
+    container.appendChild(div);
+}
+
+function removeProductRow(id) {
+    const el = document.getElementById(`prodRow_${id}`);
+    if (el) el.remove();
+    calcGrandTotal();
+}
+
+function onProductSelect(rowId, kod) {
+    const p = getData(STORAGE.products).find(x => x.kod === kod);
+    if (p) {
+        document.getElementById(`price_${rowId}`).value = p.fiyat.toFixed(2);
+        calcRow(rowId);
+    }
+}
+
+function calcRow(rowId) {
+    const qty = parseFloat(document.getElementById(`qty_${rowId}`).value) || 0;
+    const price = parseFloat(document.getElementById(`price_${rowId}`).value) || 0;
+    let amount = qty * price;
+    for (let i = 1; i <= 5; i++) {
+        const isk = parseFloat(document.getElementById(`isk${i}_${rowId}`).value) || 0;
+        amount *= (1 - isk / 100);
+    }
+    document.getElementById(`total_${rowId}`).value = formatMoney(amount);
+    calcGrandTotal();
+}
+
+function parseMoney(str) {
+    if (!str) return 0;
+    const cleaned = String(str).replace(/\./g, '').replace(',', '.');
+    return parseFloat(cleaned) || 0;
+}
+
+function calcGrandTotal() {
+    let araToplam = 0;
+    document.querySelectorAll('[id^="total_"]').forEach(el => {
+        araToplam += parseMoney(el.value);
+    });
+
+    const kdvOrani = parseFloat(document.getElementById('orderKdvOrani').value) || 0;
+    const kdvTutari = araToplam * (kdvOrani / 100);
+    const genelToplam = araToplam + kdvTutari;
+
+    document.getElementById('orderAraToplam').textContent = formatMoney(araToplam) + ' ₺';
+    document.getElementById('orderKdvLabel').textContent = kdvOrani;
+    document.getElementById('orderKdvTutari').textContent = formatMoney(kdvTutari) + ' ₺';
+    document.getElementById('orderGrandTotal').textContent = formatMoney(genelToplam) + ' ₺';
+}
+
+function formatMoney(amount) {
+    return amount.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function initApp() {
+    updateDashboard();
+}
+
+function updateDashboard() {
+    document.getElementById('statProducts').textContent = getData(STORAGE.products).length;
+    document.getElementById('statCustomers').textContent = getUserCustomers().length;
+    const orders = getUserOrders();
+    document.getElementById('statOrders').textContent = orders.length;
+    document.getElementById('statPending').textContent = orders.filter(o => o.status === 'Beklemede').length;
+    document.getElementById('statApproved').textContent = orders.filter(o => o.status === 'Onaylandı').length;
+
+    const recent = orders.slice(0, 5);
+    const container = document.getElementById('recentOrders');
+    if (recent.length === 0) {
+        container.innerHTML = '<div class="empty-state">Henüz sipariş bulunmuyor.</div>';
+        return;
+    }
+    container.innerHTML = `
+        <table>
+            <thead>
+                <tr><th>Sipariş No</th><th>Tarih</th><th>Alıcı</th><th>Tutar</th><th>Durum</th></tr>
+            </thead>
+            <tbody>
+                ${recent.map(o => `
+                    <tr>
+                        <td><strong>${o.no}</strong></td>
+                        <td>${new Date(o.date).toLocaleDateString('tr-TR')}</td>
+                        <td>${o.customer.title}</td>
+                        <td>${formatMoney(o.grandTotal)} ₺</td>
+                        <td><span class="badge ${o.status === 'Onaylandı' ? 'badge-approved' : (o.status === 'Reddedildi' ? 'badge-rejected' : 'badge-pending')}">${o.status}</span></td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    `;
+}
+
+function clearOrderFilters() {
+    document.getElementById('filterDateStart').value = '';
+    document.getElementById('filterDateEnd').value = '';
+    document.getElementById('filterCustomer').value = '';
+    document.getElementById('filterStatus').value = '';
+    renderOrders();
+}
+
+function renderOrders() {
+    let orders = getUserOrders();
+    const tbody = document.getElementById('ordersTable');
+
+    const startDate = document.getElementById('filterDateStart').value;
+    const endDate = document.getElementById('filterDateEnd').value;
+    const customerFilter = document.getElementById('filterCustomer').value;
+    const statusFilter = document.getElementById('filterStatus').value;
+
+    if (startDate) {
+        orders = orders.filter(o => new Date(o.date) >= new Date(startDate));
+    }
+    if (endDate) {
+        const eDate = new Date(endDate);
+        eDate.setHours(23, 59, 59, 999);
+        orders = orders.filter(o => new Date(o.date) <= eDate);
+    }
+    if (customerFilter) {
+        orders = orders.filter(o => o.customer && o.customer.title === customerFilter);
+    }
+    if (statusFilter) {
+        orders = orders.filter(o => o.status === statusFilter);
+    }
+
+    if (orders.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="empty-state">Sipariş bulunamadı.</td></tr>`;
+        return;
+    }
+    tbody.innerHTML = orders.map(o => `
+        <tr>
+            <td><strong>${o.no}</strong></td>
+            <td>${new Date(o.date).toLocaleDateString('tr-TR')}</td>
+            <td>${o.customer.title}</td>
+            <td>${o.createdUser || 'admin'}</td>
+            <td>${formatMoney(o.grandTotal)} ₺</td>
+            <td><span class="badge ${o.status === 'Onaylandı' ? 'badge-approved' : (o.status === 'Reddedildi' ? 'badge-rejected' : 'badge-pending')}">${o.status}</span></td>
+            <td>
+                <button class="btn btn-outline btn-sm" onclick="viewOrder('${o.no}')">İncele</button>
+                ${hasPermission('canDeleteAllOrders') ? `<button class="btn btn-danger btn-sm" onclick="deleteSingleOrder('${o.no}')">Sil</button>` : ''}
+            </td>
+        </tr>
+    `).join('');
+}
+
+function formatIskontoText(isks) {
+    if (!isks || !Array.isArray(isks)) return '-';
+    const active = isks.filter(v => v > 0).map(v => v + '%');
+    return active.length ? active.join(' + ') : '-';
+}
+
+async function viewOrder(no) {
+    let orders = getData(STORAGE.orders);
+    let o = orders.find(x => x.no === no);
+    if (!o) return;
+
+    // Durum hâlâ "Beklemede" ise GitHub'dan son hali çek
+    if (o.status === 'Beklemede') {
+        document.getElementById('modalTitle').textContent = `Sipariş Detayı: ${o.no}`;
+        document.getElementById('modalBody').innerHTML = '<div class="alert alert-info">GitHub\'dan güncel durum kontrol ediliyor...</div>';
+        document.getElementById('modalFooter').innerHTML = '';
+        document.getElementById('orderModal').classList.remove('hidden');
+
+        try {
+            const result = await syncSingleOrderFromGitHub(no);
+            if (result && result.order) {
+                o = result.order;
+                // Listeyi de güncelle
+                renderOrders();
+                updateDashboard();
+            }
+        } catch (e) {
+            console.warn('viewOrder sync hatası:', e);
+        }
+    }
+
+    const statusBadge = o.status === 'Onaylandı' ? 'badge-approved' : (o.status === 'Reddedildi' ? 'badge-rejected' : 'badge-pending');
+
+    document.getElementById('modalTitle').textContent = `Sipariş Detayı: ${o.no}`;
+    document.getElementById('modalBody').innerHTML = `
+        <p><strong>Alıcı:</strong> ${o.customer.title} (${o.customer.contact || ''})</p>
+        <p><strong>Mail / Tel:</strong> ${o.customer.email || ''} / ${o.customer.phone || ''}</p>
+        <p><strong>Teslimat Adresi:</strong> ${o.customer.address || o.deliveryAddress || '-'}</p>
+        <p><strong>Termin:</strong> ${o.termin || '-'} | <strong>Vade:</strong> ${o.vade || '-'} gün | <strong>Ödeme:</strong> ${o.payment || '-'}</p>
+        <p><strong>Teslimat Şekli:</strong> ${o.deliveryType || '-'} | <strong>Durum:</strong> <span class="badge ${statusBadge}">${o.status}</span></p>
+        <p><strong>Oluşturan:</strong> ${o.createdUser || '-'}</p>
+        ${o.responseDate ? `<p><strong>Yanıt Tarihi:</strong> ${new Date(o.responseDate).toLocaleString('tr-TR')}</p>` : ''}
+        ${o.rejectReason ? `<p><strong>Red Sebebi:</strong> ${o.rejectReason}</p>` : ''}
+        <hr style="margin:1rem 0;">
+        <div style="overflow-x:auto;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Ürün</th>
+                    <th>Miktar</th>
+                    <th>Birim Fiyat</th>
+                    <th>İskontolar</th>
+                    <th>Tutar</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${(o.items || []).map(i => `
+                    <tr>
+                        <td>${i.kod} - ${i.aciklama || ''}</td>
+                        <td>${i.qty}</td>
+                        <td>${formatMoney(i.price)} ₺</td>
+                        <td>${formatIskontoText(i.isks)}</td>
+                        <td>${formatMoney(i.amount)} ₺</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+        </div>
+        <div class="totals-box mt-3">
+            <div class="row"><span>Ara Toplam</span><span>${formatMoney(o.araToplam)} ₺</span></div>
+            <div class="row"><span>KDV (${o.kdvOrani || 0}%)</span><span>${formatMoney(o.kdvTutari)} ₺</span></div>
+            <div class="row grand"><span>Genel Toplam</span><span>${formatMoney(o.grandTotal)} ₺</span></div>
+        </div>
+    `;
+
+    let statusButtons = '';
+    if (o.status === 'Beklemede' && currentUser && hasPermission('canApproveOrder')) {
+        statusButtons = `
+            <button class="btn btn-success btn-sm" onclick="adminSetStatus('${o.no}', 'Onaylandı')">✓ Onaylandı İşaretle</button>
+            <button class="btn btn-danger btn-sm" onclick="adminSetStatus('${o.no}', 'Reddedildi')">✗ Reddedildi İşaretle</button>
+        `;
+    }
+
+    document.getElementById('modalFooter').innerHTML = `
+        ${statusButtons}
+        <button class="btn btn-primary" onclick="exportOrderPDF('${o.no}')">📄 PDF İndir</button>
+        <button class="btn btn-secondary" onclick="closeModal()">Kapat</button>
+    `;
+    document.getElementById('orderModal').classList.remove('hidden');
+}
+
+async function adminSetStatus(orderNo, newStatus) {
+    if (!confirm(`Sipariş ${orderNo} durumunu "${newStatus}" olarak değiştirmek istediğinize emin misiniz?`)) return;
+
+    let orders = getData(STORAGE.orders);
+    const idx = orders.findIndex(o => o.no === orderNo);
+    if (idx < 0) {
+        alert('Sipariş bulunamadı.');
+        return;
+    }
+
+    orders[idx].status = newStatus;
+    orders[idx].responseDate = new Date().toISOString();
+    if (newStatus === 'Reddedildi' && !orders[idx].rejectReason) {
+        orders[idx].rejectReason = 'Admin tarafından işaretlendi';
+    }
+    setData(STORAGE.orders, orders);
+
+    // GitHub'a da yazmayı dene
+    const s = getSettings();
+    if (s.githubToken && s.githubRepo) {
+        try {
+            await saveOrderToGitHub(orders[idx]);
+        } catch (e) {
+            console.warn('GitHub kayıt hatası:', e);
+        }
+    }
+
+    alert(`Sipariş durumu "${newStatus}" olarak güncellendi.`);
+    renderOrders();
+    updateDashboard();
+    viewOrder(orderNo); // detayı yenile
+}
+
+// Türkçe karakterleri PDF uyumlu ASCII'ye çevir (jsPDF varsayılan fontu Türkçe desteklemez)
+function toPdfText(str) {
+    if (str == null) return '';
+    return String(str)
+        .replace(/ş/g, 's').replace(/Ş/g, 'S')
+        .replace(/ğ/g, 'g').replace(/Ğ/g, 'G')
+        .replace(/ı/g, 'i').replace(/İ/g, 'I')
+        .replace(/ö/g, 'o').replace(/Ö/g, 'O')
+        .replace(/ü/g, 'u').replace(/Ü/g, 'U')
+        .replace(/ç/g, 'c').replace(/Ç/g, 'C');
+}
+
+function exportOrderPDF(no) {
+    const orders = getData(STORAGE.orders);
+    const o = orders.find(x => x.no === no);
+    if (!o) return;
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const s = getSettings();
+    const sellerName = s.sellerCompany || 'Satici Firma';
+
+    // Başlık
+    doc.setFontSize(16);
+    doc.text(toPdfText(`SIPARIS FORMU: ${o.no}`), 14, 18);
+
+    doc.setFontSize(10);
+    doc.text(toPdfText(`Satici: ${sellerName}`), 14, 26);
+    doc.text(toPdfText(`Tarih: ${new Date(o.date).toLocaleDateString('tr-TR')}`), 14, 32);
+    doc.text(toPdfText(`Durum: ${o.status || 'Beklemede'}`), 14, 38);
+
+    doc.text(toPdfText(`Alici: ${o.customer.title || ''}`), 14, 46);
+    doc.text(toPdfText(`Yetkili: ${o.customer.contact || ''}  |  Tel: ${o.customer.phone || ''}`), 14, 52);
+    doc.text(toPdfText(`E-posta: ${o.customer.email || ''}`), 14, 58);
+
+    const addr = o.customer.address || o.deliveryAddress || '-';
+    const addrLines = doc.splitTextToSize(toPdfText(`Teslimat Adresi: ${addr}`), 180);
+    doc.text(addrLines, 14, 64);
+
+    let yPos = 64 + (addrLines.length * 5) + 4;
+    doc.text(toPdfText(`Termin: ${o.termin || '-'}  |  Vade: ${o.vade || '-'} gun  |  Odeme: ${o.payment || '-'}`), 14, yPos);
+    yPos += 6;
+    doc.text(toPdfText(`Teslimat Sekli: ${o.deliveryType || '-'}  |  Olusturan: ${o.createdUser || '-'}`), 14, yPos);
+    yPos += 8;
+
+    const tableRows = (o.items || []).map(i => [
+        toPdfText(i.kod || ''),
+        toPdfText(i.aciklama || ''),
+        String(i.qty || 0),
+        formatMoney(i.price) + ' TL',
+        toPdfText(formatIskontoText(i.isks)),
+        formatMoney(i.amount) + ' TL'
+    ]);
+
+    doc.autoTable({
+        startY: yPos,
+        head: [[
+            toPdfText('Kod'),
+            toPdfText('Aciklama'),
+            toPdfText('Miktar'),
+            toPdfText('B.Fiyat'),
+            toPdfText('Iskontolar'),
+            toPdfText('Tutar')
+        ]],
+        body: tableRows,
+        styles: { fontSize: 8, cellPadding: 2 },
+        headStyles: { fillColor: [30, 64, 175], textColor: 255 },
+        columnStyles: {
+            0: { cellWidth: 22 },
+            1: { cellWidth: 55 },
+            2: { cellWidth: 18 },
+            3: { cellWidth: 25 },
+            4: { cellWidth: 28 },
+            5: { cellWidth: 28 }
+        }
+    });
+
+    const finalY = doc.lastAutoTable.finalY + 10;
+    doc.setFontSize(10);
+    doc.text(toPdfText(`Ara Toplam (KDV Haric): ${formatMoney(o.araToplam)} TL`), 120, finalY);
+    doc.text(toPdfText(`KDV (%${o.kdvOrani || 0}): ${formatMoney(o.kdvTutari)} TL`), 120, finalY + 6);
+    doc.setFontSize(12);
+    doc.setFont(undefined, 'bold');
+    doc.text(toPdfText(`GENEL TOPLAM: ${formatMoney(o.grandTotal)} TL`), 120, finalY + 14);
+    doc.setFont(undefined, 'normal');
+
+    // Alt bilgi
+    doc.setFontSize(8);
+    doc.setTextColor(100);
+    doc.text(toPdfText('Bu belge elektronik ortamda olusturulmustur.'), 14, 285);
+
+    doc.save(`${o.no}.pdf`);
+}
+
+function closeModal() {
+    document.getElementById('orderModal').classList.add('hidden');
+}
+
+async function sendOrderEmail(order) {
+    const s = getSettings();
+    if (!s.publicKey || !s.serviceId || !s.templateId) return false;
+    try {
+        const baseUrl = window.location.href.split('#')[0];
+        let approvalLink = `${baseUrl}#approve/${order.no}`;
+        if (s.githubRepo) {
+            approvalLink += `?repo=${encodeURIComponent(s.githubRepo)}&branch=${encodeURIComponent(s.githubBranch || 'main')}`;
+        }
+        const templateParams = {
+            to_email: order.customer.email,
+            to_name: order.customer.title,
+            order_no: order.no,
+            order_date: new Date(order.date).toLocaleDateString('tr-TR'),
+            grand_total: formatMoney(order.grandTotal) + ' ₺',
+            approval_link: approvalLink,
+            seller_company: s.sellerCompany || 'Sistem'
+        };
+        await emailjs.send(s.serviceId, s.templateId, templateParams);
+        return true;
+    } catch (e) {
+        console.error("Mail gönderme hatası:", e);
+        return false;
+    }
+}
+
+// Türkçe karakter ve sunucu uyumlu güvenli Base64 kodlama fonksiyonu
+function stringToUTF8Base64(str) {
+    const utf8Bytes = new TextEncoder().encode(str);
+    let binaryString = '';
+    for (let i = 0; i < utf8Bytes.length; i++) {
+        binaryString += String.fromCharCode(utf8Bytes[i]);
+    }
+    return btoa(binaryString);
+}
+
+// Türkçe karakter uyumlu Base64 çözme fonksiyonu
+function utf8Base64ToString(base64Str) {
+    const binaryString = atob(base64Str);
+    const len = binaryString.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+    }
+    return new TextDecoder().decode(bytes);
+}
+
+async function saveOrderToGitHub(order) {
+    const settings = getSettings();
+    if (!settings.githubToken || !settings.githubRepo) return false;
+    const token = settings.githubToken;
+    const repo = settings.githubRepo;
+    const branch = settings.githubBranch || "main";
+    const filePath = `orders/${order.no}.json`;
+    const fileContent = JSON.stringify(order, null, 2);
+    
+    // Sunucularda Türkçe karakter bozulmasını önleyen güvenli Base64 dönüşümü
+    const base64Content = stringToUTF8Base64(fileContent);
+    const url = `https://api.github.com/repos/${repo}/contents/${filePath}`;
+
+    try {
+        let sha = null;
+        const checkRes = await fetch(url, { headers: { 'Authorization': `token ${token}` } });
+        if (checkRes.ok) {
+            const fileData = await checkRes.json();
+            sha = fileData.sha;
+        }
+        const bodyData = { message: `Sipariş güncellendi: ${order.no}`, content: base64Content, branch };
+        if (sha) bodyData.sha = sha;
+
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify(bodyData)
+        });
+        return response.ok;
+    } catch (error) {
+        return false;
+    }
+}
+
+async function createOrder() {
+    const title = document.getElementById('orderCustTitle').value.trim();
+    const contact = document.getElementById('orderCustContact').value.trim();
+    const email = document.getElementById('orderCustEmail').value.trim();
+    const phone = document.getElementById('orderCustPhone').value.trim();
+    const address = document.getElementById('orderDeliveryAddress').value.trim();
+    const termin = document.getElementById('orderTermin').value;
+
+    if (!title || !contact || !email || !phone || !address || !termin) {
+        alert('Lütfen zorunlu alanları doldurun.');
+        return;
+    }
+
+    const rows = document.querySelectorAll('[id^="prodRow_"]');
+    const items = [];
+    let araToplam = 0;
+
+    rows.forEach(row => {
+        const id = row.id.split('_')[1];
+        const kod = row.querySelector('select').value;
+        if (!kod) return;
+        const p = getData(STORAGE.products).find(x => x.kod === kod);
+        const qty = parseFloat(document.getElementById(`qty_${id}`).value) || 0;
+        const price = parseFloat(document.getElementById(`price_${id}`).value) || 0;
+        const isks = [];
+        for (let i = 1; i <= 5; i++) isks.push(parseFloat(document.getElementById(`isk${i}_${id}`).value) || 0);
+        let amount = qty * price;
+        isks.forEach(isk => amount *= (1 - isk / 100));
+        araToplam += amount;
+        items.push({ kod, aciklama: p ? p.aciklama : '', qty, price, isks, amount });
+    });
+
+    if (items.length === 0) {
+        alert('En az bir ürün seçmelisiniz.');
+        return;
+    }
+
+    const kdvOrani = parseFloat(document.getElementById('orderKdvOrani').value) || 0;
+    const kdvTutari = araToplam * (kdvOrani / 100);
+    const grandTotal = araToplam + kdvTutari;
+
+    const now = new Date();
+    const dateStr = now.toISOString().slice(0,10).replace(/-/g,'');
+    let orders = getData(STORAGE.orders);
+    const todayCount = orders.filter(o => o.no && o.no.startsWith(`SIP-${dateStr}`)).length;
+    const seq = (todayCount + 1).toString().padStart(3, '0');
+    const orderNo = `SIP-${dateStr}-${seq}`;
+
+    const order = {
+        no: orderNo,
+        date: now.toISOString(),
+        customer: { title, contact, email, phone, address },
+        deliveryAddress: address,
+        termin,
+        vade: document.getElementById('orderVade').value,
+        payment: document.getElementById('orderPayment').value,
+        deliveryType: document.getElementById('orderDeliveryType').value,
+        items,
+        araToplam,
+        kdvOrani,
+        kdvTutari,
+        grandTotal,
+        status: 'Beklemede',
+        rejectReason: '',
+        responseDate: null,
+        createdUser: currentUser ? currentUser.username : 'admin'
+    };
+
+    const btn = document.getElementById('btnCreateOrder');
+    btn.disabled = true;
+    btn.textContent = 'İşlem yapılıyor...';
+
+    const mailSent = await sendOrderEmail(order);
+    const ghSaved = await saveOrderToGitHub(order);
+
+    orders.unshift(order);
+    setData(STORAGE.orders, orders);
+
+    btn.disabled = false;
+    btn.textContent = 'Siparişi Oluştur ve Mail Gönder';
+
+    let msg = `✅ Sipariş oluşturuldu!\n\nSipariş No: ${orderNo}\nGenel Toplam: ${formatMoney(grandTotal)} ₺\n`;
+    if (mailSent) msg += "• Mail alıcıya başarıyla gönderildi.\n";
+    else msg += "⚠️ Mail gönderilemedi (EmailJS ayarlarını kontrol edin).\n";
+    if (ghSaved) {
+        msg += "• Sipariş GitHub'a kaydedildi (alıcı linkten görebilecek).\n";
+    } else {
+        msg += "⚠️ GitHub'a kaydedilemedi! Ayarlar > GitHub PAT jetonunuzu kontrol edin.\n";
+    }
+
+    alert(msg);
+
+    document.getElementById('orderProducts').innerHTML = '';
+    productRowCounter = 0;
+    addProductRow();
+}
+
+async function fetchOrderFromGitHub(orderNo, repo, branch) {
+    if (!repo || !orderNo) return null;
+    const branchName = branch || 'main';
+
+    // Önce Worker üzerinden dene (CORS sorunu yok)
+    if (typeof APPROVAL_PROXY_URL !== 'undefined' && APPROVAL_PROXY_URL) {
+        try {
+            const url = `${APPROVAL_PROXY_URL}?orderNo=${encodeURIComponent(orderNo)}&repo=${encodeURIComponent(repo)}&branch=${encodeURIComponent(branchName)}`;
+            const res = await fetch(url);
+            if (res.ok) return await res.json();
+        } catch (e) {
+            console.warn('Worker okuma hatası:', e);
+        }
+    }
+
+    // Yedek: doğrudan GitHub (CORS sorunlu olabilir)
+    const settings = getSettings();
+    const rawUrl = `https://raw.githubusercontent.com/${repo}/${branchName}/orders/${orderNo}.json?t=${Date.now()}`;
+    const headers = {};
+    if (settings.githubToken) headers['Authorization'] = `token ${settings.githubToken}`;
+
+    try {
+        const res = await fetch(rawUrl, { headers });
+        if (res.ok) return await res.json();
+    } catch (e) {}
+
+    try {
+        const apiUrl = `https://api.github.com/repos/${repo}/contents/orders/${orderNo}.json?ref=${branchName}`;
+        const res = await fetch(apiUrl, { headers });
+        if (res.ok) {
+            const data = await res.json();
+            if (data.content) {
+                const decoded = utf8Base64ToString(data.content.replace(/\n/g, ''));
+                return JSON.parse(decoded);
+            }
+        }
+    } catch (e) {}
+
+    return null;
+}
+
+/**
+ * Tek bir siparişin durumunu GitHub'dan çekip localStorage'ı günceller.
+ * Dönüş: güncellenmiş order veya null
+ */
+async function syncSingleOrderFromGitHub(orderNo) {
+    const s = getSettings();
+    if (!s.githubRepo) return null;
+
+    const ghOrder = await fetchOrderFromGitHub(orderNo, s.githubRepo, s.githubBranch || 'main');
+    if (!ghOrder) return null;
+
+    let orders = getData(STORAGE.orders);
+    const idx = orders.findIndex(o => o.no === orderNo);
+
+    if (idx >= 0) {
+        // Sadece durum / yanıt alanlarını güncelle (yerel diğer verileri koru)
+        const oldStatus = orders[idx].status;
+        orders[idx].status = ghOrder.status || orders[idx].status;
+        orders[idx].responseDate = ghOrder.responseDate || orders[idx].responseDate;
+        orders[idx].rejectReason = ghOrder.rejectReason || orders[idx].rejectReason || '';
+        setData(STORAGE.orders, orders);
+        return { order: orders[idx], changed: oldStatus !== orders[idx].status };
+    } else {
+        // Yerelde yoksa GitHub'dan gelen siparişi ekle
+        orders.unshift(ghOrder);
+        setData(STORAGE.orders, orders);
+        return { order: ghOrder, changed: true };
+    }
+}
+
+/**
+ * Bekleyen (ve istenirse tüm) siparişlerin durumunu GitHub'dan yeniler.
+ */
+async function syncAllOrdersFromGitHub() {
+    const s = getSettings();
+    const infoEl = document.getElementById('syncStatusInfo');
+    const btn = document.getElementById('btnSyncGitHub');
+
+    if (!s.githubRepo || !s.githubToken) {
+        if (infoEl) {
+            infoEl.style.display = 'block';
+            infoEl.className = 'alert alert-warning';
+            infoEl.innerHTML = '⚠️ GitHub ayarları eksik. <strong>Ayarlar</strong> sekmesinden Repo ve Personal Access Token girin.';
+        }
+        return;
+    }
+
+    if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Yenileniyor...';
+    }
+    if (infoEl) {
+        infoEl.style.display = 'block';
+        infoEl.className = 'alert alert-info';
+        infoEl.textContent = 'GitHub\'dan sipariş durumları kontrol ediliyor...';
+    }
+
+    let orders = getData(STORAGE.orders);
+    // Öncelikle "Beklemede" olanları, yoksa son 30 siparişi kontrol et
+    let toCheck = orders.filter(o => o.status === 'Beklemede');
+    if (toCheck.length === 0) {
+        toCheck = orders.slice(0, 30);
+    }
+
+    let updatedCount = 0;
+    const changes = [];
+
+    for (const o of toCheck) {
+        try {
+            const result = await syncSingleOrderFromGitHub(o.no);
+            if (result && result.changed) {
+                updatedCount++;
+                changes.push(`${o.no} → ${result.order.status}`);
+            }
+        } catch (e) {
+            console.warn('Sync hatası:', o.no, e);
+        }
+    }
+
+    if (btn) {
+        btn.disabled = false;
+        btn.textContent = '🔄 GitHub\'dan Durumları Yenile';
+    }
+
+    if (infoEl) {
+        if (updatedCount > 0) {
+            infoEl.className = 'alert alert-info';
+            infoEl.innerHTML = `✅ <strong>${updatedCount}</strong> sipariş güncellendi:<br>${changes.join('<br>')}`;
+        } else {
+            infoEl.className = 'alert alert-info';
+            infoEl.textContent = 'Kontrol tamamlandı. Yeni durum değişikliği bulunamadı.';
+        }
+    }
+
+    // Listeyi ve dashboard'u yenile
+    renderOrders();
+    updateDashboard();
+}
+
+async function loadBuyerOrder(prefillNo) {
+    const inputEl = document.getElementById('buyerOrderNo');
+    const no = (prefillNo || (inputEl ? inputEl.value.trim() : '')).trim();
+    if (!no) {
+        alert('Lütfen sipariş numarasını girin.');
+        return;
+    }
+    if (inputEl) inputEl.value = no;
+
+    const detailEl = document.getElementById('buyerOrderDetail');
+    detailEl.classList.remove('hidden');
+    detailEl.innerHTML = '<div class="alert alert-info">Sipariş yükleniyor...</div>';
+
+    let orders = getData(STORAGE.orders);
+    let order = orders.find(x => x.no === no);
+
+    let repo = null;
+    let branch = 'main';
+    const hash = location.hash || '';
+    if (hash.includes('?')) {
+        const params = new URLSearchParams(hash.split('?')[1]);
+        repo = params.get('repo');
+        branch = params.get('branch') || 'main';
+    }
+    if (!repo) {
+        const s = getSettings();
+        repo = s.githubRepo || null;
+        branch = s.githubBranch || 'main';
+    }
+
+    if (repo) {
+        const ghOrder = await fetchOrderFromGitHub(no, repo, branch);
+        if (ghOrder) order = ghOrder;
+    }
+
+    if (!order) {
+        detailEl.innerHTML = `
+            <div class="alert alert-warning">
+                <strong>Sipariş bulunamadı:</strong> ${no}<br><br>
+                Lütfen sipariş numarasını kontrol edin.
+            </div>`;
+        return;
+    }
+
+    currentLoadedBuyerOrder = order;
+    renderBuyerOrderDetail(order);
+}
+
+function renderBuyerOrderDetail(order) {
+    const detailEl = document.getElementById('buyerOrderDetail');
+    const isPending = order.status === 'Beklemede';
+    const statusClass = order.status === 'Onaylandı' ? 'badge-approved' : (order.status === 'Reddedildi' ? 'badge-rejected' : 'badge-pending');
+
+    const itemsHtml = (order.items || []).map(i => `
+        <tr>
+            <td>${i.kod} - ${i.aciklama || ''}</td>
+            <td>${i.qty}</td>
+            <td>${formatMoney(i.price)} ₺</td>
+            <td>${formatIskontoText(i.isks)}</td>
+            <td>${formatMoney(i.amount)} ₺</td>
+        </tr>
+    `).join('');
+
+    let actionHtml = '';
+    if (isPending) {
+        actionHtml = `
+            <div class="mt-3" style="border-top:1px solid var(--border); padding-top:1rem;">
+                <h4 style="margin-bottom:0.75rem;">Sipariş Kararınız</h4>
+                <div class="flex gap-2" style="flex-wrap:wrap;">
+                    <button class="btn btn-success" id="btnApprove" onclick="buyerApproveOrder('${order.no}')">✓ Onayla</button>
+                    <button class="btn btn-danger" id="btnReject" onclick="buyerRejectOrder('${order.no}')">✗ Reddet</button>
+                </div>
+                <div id="rejectReasonBox" class="hidden mt-2">
+                    <label>Red Sebebi (opsiyonel)</label>
+                    <textarea id="buyerRejectReason" rows="2" placeholder="Red nedeninizi yazabilirsiniz..."></textarea>
+                    <button class="btn btn-danger btn-sm mt-2" onclick="confirmBuyerReject('${order.no}')">Reddi Onayla</button>
+                </div>
+            </div>`;
+    } else {
+        actionHtml = `
+            <div class="alert ${order.status === 'Onaylandı' ? 'alert-info' : 'alert-warning'} mt-3">
+                Bu sipariş daha önce <strong>${order.status}</strong> olarak işaretlenmiş.
+                ${order.responseDate ? '<br>Yanıt Tarihi: ' + new Date(order.responseDate).toLocaleString('tr-TR') : ''}
+                ${order.rejectReason ? '<br>Red Sebebi: ' + order.rejectReason : ''}
+            </div>`;
+    }
+
+    detailEl.innerHTML = `
+        <div class="card" style="margin:0; border:none; box-shadow:none;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                <h3 style="margin:0;">Sipariş: ${order.no}</h3>
+                <span class="badge ${statusClass}">${order.status}</span>
+            </div>
+            <p><strong>Alıcı:</strong> ${order.customer.title} (${order.customer.contact || ''})</p>
+            <p><strong>Mail / Tel:</strong> ${order.customer.email || ''} / ${order.customer.phone || ''}</p>
+            <p><strong>Teslimat Adresi:</strong> ${order.customer.address || order.deliveryAddress || '-'}</p>
+            <p><strong>Termin:</strong> ${order.termin || '-'} &nbsp;|&nbsp; <strong>Vade:</strong> ${order.vade || '-'} gün &nbsp;|&nbsp; <strong>Ödeme:</strong> ${order.payment || '-'}</p>
+            <p><strong>Teslimat Şekli:</strong> ${order.deliveryType || '-'}</p>
+            <hr style="margin:1rem 0;">
+            <div style="overflow-x:auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ürün</th>
+                        <th>Miktar</th>
+                        <th>Birim Fiyat</th>
+                        <th>İskontolar</th>
+                        <th>Tutar</th>
+                    </tr>
+                </thead>
+                <tbody>${itemsHtml}</tbody>
+            </table>
+            </div>
+            <div class="totals-box mt-3">
+                <div class="row"><span>Ara Toplam</span><span>${formatMoney(order.araToplam)} ₺</span></div>
+                <div class="row"><span>KDV (${order.kdvOrani || 0}%)</span><span>${formatMoney(order.kdvTutari)} ₺</span></div>
+                <div class="row grand"><span>Genel Toplam</span><span>${formatMoney(order.grandTotal)} ₺</span></div>
+            </div>
+            ${actionHtml}
+        </div>
+    `;
+}
+
+async function updateOrderStatus(orderNo, newStatus, rejectReason = '') {
+    let order = currentLoadedBuyerOrder;
+    let orders = getData(STORAGE.orders);
+    const idx = orders.findIndex(o => o.no === orderNo);
+
+    if (idx >= 0) order = orders[idx];
+
+    if (!order) {
+        // GitHub'dan çekmeyi dene
+        const s = getSettings();
+        if (s.githubRepo) {
+            order = await fetchOrderFromGitHub(orderNo, s.githubRepo, s.githubBranch || 'main');
+        }
+    }
+
+    if (!order) {
+        alert('Sipariş bulunamadı!');
+        return null;
+    }
+
+    order.status = newStatus;
+    order.responseDate = new Date().toISOString();
+    order.rejectReason = rejectReason || '';
+
+    // Yerel güncelle (varsa)
+    if (idx >= 0) {
+        orders[idx] = order;
+        setData(STORAGE.orders, orders);
+    }
+
+    // Proxy üzerinden GitHub'a yaz
+    const s = getSettings();
+    // Repo bilgisini hash'ten veya ayarlardan al
+    let repo = s.githubRepo;
+    let branch = s.githubBranch || 'main';
+    const hash = location.hash || '';
+    if (hash.includes('?')) {
+        const params = new URLSearchParams(hash.split('?')[1]);
+        if (params.get('repo')) repo = params.get('repo');
+        if (params.get('branch')) branch = params.get('branch');
+    }
+    // Varsayılan repo
+    if (!repo) repo = 'mehmetkarahan279/siparis_yonetimi';
+
+    if (typeof APPROVAL_PROXY_URL !== 'undefined' && APPROVAL_PROXY_URL && repo) {
+        try {
+            const res = await fetch(APPROVAL_PROXY_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    orderNo,
+                    status: newStatus,
+                    rejectReason: rejectReason || '',
+                    repo,
+                    branch
+                })
+            });
+            const data = await res.json();
+            if (!data.success) {
+                console.warn('Proxy hatası:', data);
+                alert('GitHub güncellenemedi: ' + (data.error || 'bilinmeyen hata'));
+            }
+        } catch (e) {
+            console.error('Proxy çağrı hatası:', e);
+            alert('Bağlantı hatası. İnternetini kontrol et.');
+        }
+    }
+
+    // Satıcıya mail (opsiyonel)
+    if (s.publicKey && s.serviceId && s.templateId && s.sellerEmail) {
+        try {
+            await emailjs.send(s.serviceId, s.templateId, {
+                to_email: s.sellerEmail,
+                to_name: s.sellerCompany || 'Satıcı',
+                order_no: orderNo,
+                grand_total: order ? formatMoney(order.grandTotal) + ' ₺' : '',
+                message: `Alıcı "${orderNo}" numaralı siparişi ${newStatus} olarak işaretledi.${rejectReason ? ' Sebep: ' + rejectReason : ''} Siparişler sayfasından kontrol edebilirsiniz.`
+            });
+        } catch (e) {}
+    }
+
+    currentLoadedBuyerOrder = order;
+    return order;
+}
+
+async function buyerApproveOrder(orderNo) {
+    if (!confirm(`"${orderNo}" numaralı siparişi ONAYLAMAK istediğinize emin misiniz?`)) return;
+    const btn = document.getElementById('btnApprove');
+    if(btn) { btn.disabled = true; btn.textContent = 'İşleniyor...'; }
+    
+    const order = await updateOrderStatus(orderNo, 'Onaylandı');
+    alert('✅ Sipariş başarıyla onaylandı. Kararınız sisteme kaydedildi!');
+    if (order) renderBuyerOrderDetail(order);
+}
+
+function buyerRejectOrder(orderNo) {
+    const box = document.getElementById('rejectReasonBox');
+    if (box) box.classList.remove('hidden');
+}
+
+async function confirmBuyerReject(orderNo) {
+    const reasonEl = document.getElementById('buyerRejectReason');
+    const reason = reasonEl ? reasonEl.value.trim() : '';
+    if (!confirm(`"${orderNo}" numaralı siparişi REDDETMEK istediğinize emin misiniz?`)) return;
+    
+    const order = await updateOrderStatus(orderNo, 'Reddedildi', reason);
+    alert('Sipariş reddedildi ve kararın kaydı yapıldı.');
+    if (order) renderBuyerOrderDetail(order);
+}
+
+function handleApprovalHash() {
+    const hash = location.hash || '';
+    if (!hash.startsWith('#approve/') && hash !== '#buyerView') return false;
+
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('app').classList.remove('hidden');
+    
+    const mainNav = document.getElementById('mainNavTabs');
+    const headerUserArea = document.getElementById('headerUserArea');
+    if (mainNav) mainNav.classList.add('hidden');
+    if (headerUserArea) headerUserArea.classList.add('hidden');
+
+    const notice = document.getElementById('buyerNotice');
+    const searchBox = document.getElementById('buyerSearchBox');
+    if (notice) notice.classList.add('hidden');
+    if (searchBox) searchBox.classList.add('hidden');
+
+    document.querySelectorAll('.admin-only').forEach(el => el.classList.add('hidden'));
+
+    showTab('buyerView');
+
+    if (hash.startsWith('#approve/')) {
+        let orderPart = hash.substring('#approve/'.length);
+        if (orderPart.includes('?')) orderPart = orderPart.split('?')[0];
+        const orderNo = decodeURIComponent(orderPart.trim());
+        if (orderNo) {
+            const input = document.getElementById('buyerOrderNo');
+            if (input) input.value = orderNo;
+            setTimeout(() => loadBuyerOrder(orderNo), 150);
+        }
+    }
+    return true;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    initDefaultUsers();
+
+    // Alıcı onay linki varsa onu önceliklendir
+    if (handleApprovalHash()) {
+        return;
+    }
+
+    // Oturum geri yükleme (sayfa yenilense bile giriş kalır)
+    try {
+        const saved = safeSessionGet('sms_currentUser');
+        if (saved) {
+            const user = JSON.parse(saved);
+            if (user && user.username) {
+                enterApp(user);
+                return;
+            }
+        }
+    } catch (e) { }
+
+    // Normal giriş ekranı kalır
+});
+
+window.addEventListener('hashchange', function() {
+    handleApprovalHash();
+});
+
+function deleteSingleOrder(orderNo) {
+    if (!hasPermission('canDeleteAllOrders')) {
+        alert('Bu işlem için yetkiniz yok.');
+        return;
+    }
+    if (!confirm(`"${orderNo}" numaralı siparişi silmek istediğinize emin misiniz?`)) return;
+    
+    let orders = getData(STORAGE.orders);
+    orders = orders.filter(o => o.no !== orderNo);
+    setData(STORAGE.orders, orders);
+    renderOrders();
+    updateDashboard();
+    alert('Sipariş silindi.');
+}
+
+function deleteAllOrders() {
+    if (!hasPermission('canDeleteAllOrders')) {
+        alert('Bu işlem için yetkiniz yok.');
+        return;
+    }
+    if (!confirm('TÜM siparişler silinecek. Bu işlem geri alınamaz. Emin misiniz?')) return;
+    setData(STORAGE.orders, []);
+    renderOrders();
+    updateDashboard();
+    alert('Tüm siparişler silindi.');
+}
+
+function exportOrdersXLS() {
+    if (!hasPermission('canExportXLS')) {
+        alert('Bu işlem için yetkiniz yok.');
+        return;
+    }
+    const orders = getUserOrders();
+    if (orders.length === 0) {
+        alert('İndirilecek sipariş yok.');
+        return;
+    }
+
+    let csv = 'Sipariş No;Tarih;Alıcı;Oluşturan;Tutar;Durum;Termin;Vade\n';
+    orders.forEach(o => {
+        csv += [
+            o.no,
+            new Date(o.date).toLocaleDateString('tr-TR'),
+            (o.customer && o.customer.title) || '',
+            o.createdUser || '',
+            o.grandTotal || 0,
+            o.status || '',
+            o.termin || '',
+            o.vade || ''
+        ].join(';') + '\n';
+    });
+
+    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'siparisler_' + new Date().toISOString().slice(0,10) + '.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+function updateOrderActionButtons() {
+    const delBtn = document.getElementById('btnDeleteAllOrders');
+    const xlsBtn = document.getElementById('btnExportXLS');
+    if (delBtn) delBtn.style.display = hasPermission('canDeleteAllOrders') ? 'inline-flex' : 'none';
+    if (xlsBtn) xlsBtn.style.display = hasPermission('canExportXLS') ? 'inline-flex' : 'none';
+}
+
+</script>
+</body>
+</html>

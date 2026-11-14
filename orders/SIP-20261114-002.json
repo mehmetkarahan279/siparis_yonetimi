@@ -33,8 +33,8 @@
   "kdvOrani": 20,
   "kdvTutari": 4600,
   "grandTotal": 27600,
-  "status": "Beklemede",
-  "rejectReason": "",
-  "responseDate": null,
+  "status": "Reddedildi",
+  "rejectReason": "Pahalı",
+  "responseDate": "2026-11-14T15:03:40.228Z",
   "createdUser": "KENAN DÜNDAR"
 }

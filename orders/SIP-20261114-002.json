@@ -1,6 +1,6 @@
 {
   "no": "SIP-20261114-002",
-  "date": "2026-11-14T13:31:50.511Z",
+  "date": "2026-11-14T15:03:14.418Z",
   "customer": {
     "title": "KANYON BİLGİSAYAR VE DANIŞMANLIK HİZMETLERİ",
     "contact": "Mehmet KARAHAN",
@@ -9,16 +9,16 @@
     "address": "KİRAZPINAR"
   },
   "deliveryAddress": "KİRAZPINAR",
-  "termin": "2026-11-20",
+  "termin": "2026-10-15",
   "vade": "60",
   "payment": "Havale/EFT",
   "deliveryType": "Ambar",
   "items": [
     {
-      "kod": "KPK-110",
-      "aciklama": "KBR GENÄ°Å MEÅRUBAT BARDAÄI 6 LI",
-      "qty": 1500,
-      "price": 125,
+      "kod": "KPK-102",
+      "aciklama": "KBR 180 CC PLASTÄ°K BARDAK 10 LU",
+      "qty": 1000,
+      "price": 23,
       "isks": [
         0,
         0,
@@ -26,15 +26,15 @@
         0,
         0
       ],
-      "amount": 187500
+      "amount": 23000
     }
   ],
-  "araToplam": 187500,
+  "araToplam": 23000,
   "kdvOrani": 20,
-  "kdvTutari": 37500,
-  "grandTotal": 225000,
+  "kdvTutari": 4600,
+  "grandTotal": 27600,
   "status": "Beklemede",
   "rejectReason": "",
   "responseDate": null,
-  "createdUser": "admin"
+  "createdUser": "KENAN DÜNDAR"
 }

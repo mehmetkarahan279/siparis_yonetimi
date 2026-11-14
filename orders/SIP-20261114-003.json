@@ -1,0 +1,40 @@
+{
+  "no": "SIP-20261114-003",
+  "date": "2026-11-14T11:04:04.985Z",
+  "customer": {
+    "title": "MEHMET",
+    "contact": "MEHMET",
+    "email": "eminekarahan279@gmail.com",
+    "phone": "531738540",
+    "address": "bursa"
+  },
+  "deliveryAddress": "bursa",
+  "termin": "2026-11-15",
+  "vade": "30",
+  "payment": "Havale/EFT",
+  "deliveryType": "Ambar",
+  "items": [
+    {
+      "kod": "KPK-111",
+      "aciklama": "KBR Ä°NCE MEÅRUBAT BARDAÄI 6 LI",
+      "qty": 6500,
+      "price": 90,
+      "isks": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "amount": 585000
+    }
+  ],
+  "araToplam": 585000,
+  "kdvOrani": 20,
+  "kdvTutari": 117000,
+  "grandTotal": 702000,
+  "status": "Beklemede",
+  "rejectReason": "",
+  "responseDate": null,
+  "createdUser": "admin"
+}

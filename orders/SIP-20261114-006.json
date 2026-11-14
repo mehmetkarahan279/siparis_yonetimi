@@ -1,0 +1,40 @@
+{
+  "no": "SIP-20261114-006",
+  "date": "2026-11-14T12:06:26.666Z",
+  "customer": {
+    "title": "MEHMET",
+    "contact": "MEHMET",
+    "email": "eminekarahan279@gmail.com",
+    "phone": "531738540",
+    "address": "bursa"
+  },
+  "deliveryAddress": "bursa",
+  "termin": "2026-11-15",
+  "vade": "30",
+  "payment": "Havale/EFT",
+  "deliveryType": "Ambar",
+  "items": [
+    {
+      "kod": "KPK-101",
+      "aciklama": "KBR 180 CC PLASTÄ°K BARDAK 25 LÄ°",
+      "qty": 333,
+      "price": 40,
+      "isks": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "amount": 13320
+    }
+  ],
+  "araToplam": 13320,
+  "kdvOrani": 20,
+  "kdvTutari": 2664,
+  "grandTotal": 15984,
+  "status": "Beklemede",
+  "rejectReason": "",
+  "responseDate": null,
+  "createdUser": "admin"
+}

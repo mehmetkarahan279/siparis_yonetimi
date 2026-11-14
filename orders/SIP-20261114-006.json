@@ -33,8 +33,8 @@
   "kdvOrani": 20,
   "kdvTutari": 1200,
   "grandTotal": 7200,
-  "status": "Beklemede",
+  "status": "Onaylandı",
   "rejectReason": "",
-  "responseDate": null,
+  "responseDate": "2026-11-14T14:29:51.156Z",
   "createdUser": "admin"
 }
